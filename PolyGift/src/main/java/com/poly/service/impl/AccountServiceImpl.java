@@ -2,10 +2,10 @@ package com.poly.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import com.poly.Utils.ObjectMapperUtils;
 import com.poly.dto.AccountDto;
@@ -23,23 +23,14 @@ public class AccountServiceImpl implements AccountService{
 	public static List<Account> listAccount = new ArrayList<Account>();
 
 	@Override
-	public Account findById(String username) {
-		return accountRepo.findById(username).get();
+	public List<Account> findByUsername(Optional<String> username) {
+		return accountRepo.findByUsername(username.get());
 	}
 
 	public List<Account> findAll() {
-		return listAccount;
+		return accountRepo.findAll();
 	}
 
-	public boolean checkLogin(Account account) {
-		for (Account accountList : listAccount) {
-			if (StringUtils.pathEquals(account.getUsername(), accountList.getUsername())
-					&& StringUtils.pathEquals(account.getPassword(), accountList.getPassword())) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	@Override
 	public List<AccountDto> findAll(String sortDirection, String sortBy, int pageIndex, int pageSize) {
@@ -73,17 +64,18 @@ public class AccountServiceImpl implements AccountService{
 		accountRepo.save(account);
 		return cDto;
 	}
+		
+	
 
 	@Override
 	public List<Account> getAdministrators() {
-		// TODO Auto-generated method stub
 		return accountRepo.getAdministrators();
 	}
 
 	@Override
-	public List<Account> getAdminstrators() {
-		// TODO Auto-generated method stub
-		return null;
+	public Account findById(String username) {
+		return accountRepo.findById(username).get();
 	}
+
 
 }
