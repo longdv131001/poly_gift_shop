@@ -26,6 +26,7 @@ import com.poly.service.AccountService;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	AccountService accountService;
+	
 	@Autowired
 	BCryptPasswordEncoder pe;
 	
@@ -51,26 +52,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
 		http.authorizeRequests()
-			.antMatchers("/order/**").authenticated()
-			.antMatchers("/admin/**").hasAnyRole("STAF","DIRE")
-			.antMatchers("/rest/authorities").hasRole("DIRE")
+//			.antMatchers("/order/**").authenticated()
+//			.antMatchers("/admin/**").hasAnyRole("STAF","DIRE")
+//			.antMatchers("/rest/authorities").hasRole("DIRE")
 			.anyRequest().permitAll();
 		
-		http.formLogin()
-			.loginPage("/security/login/form")
-			.loginProcessingUrl("/security/login")
-			.defaultSuccessUrl("/security/login/success",false)
-			.failureUrl("/security/login/error");
-		
-		http.rememberMe()
-			.tokenValiditySeconds(86400);
-		
-		http.exceptionHandling()
-			.accessDeniedPage("/security/unauthorid");
-		
-		http.logout()
-			.logoutUrl("/security/logoff")
-			.logoutSuccessUrl("/security/logoff/success");
+//		http.formLogin()
+//			.loginPage("/security/login/form")
+//			.loginProcessingUrl("/security/login")
+//			.defaultSuccessUrl("/security/login/success",false)
+//			.failureUrl("/security/login/error");
+//		
+//		http.rememberMe()
+//			.tokenValiditySeconds(86400);
+//		
+//		http.exceptionHandling()
+//			.accessDeniedPage("/security/unauthorid");
+//		
+//		http.logout()
+//			.logoutUrl("/security/logoff")
+//			.logoutSuccessUrl("/security/logoff/success");
 	}
 	@Bean
 	@Override

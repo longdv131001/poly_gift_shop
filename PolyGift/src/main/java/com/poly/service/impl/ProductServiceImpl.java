@@ -1,52 +1,70 @@
 package com.poly.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.poly.dao.ProductDAO;
+import com.poly.Utils.ObjectMapperUtils;
+import com.poly.dto.ProductDto;
+import com.poly.entity.Category;
 import com.poly.entity.Product;
+import com.poly.repository.CategoryDAO;
+import com.poly.repository.ProductDAO;
 import com.poly.service.ProductService;
 
 @Service
 public class ProductServiceImpl implements ProductService{
 	@Autowired
 	ProductDAO pdao;
+	
+	@Autowired
+	ObjectMapperUtils modelMapper;
+	
+	@Autowired
+	CategoryDAO cdao;
 
 	@Override
 	public List<Product> findAll() {
-		// 
 		return pdao.findAll();
 	}
 
 	@Override
 	public Product findById(Integer id) {
-		// TODO Auto-generated method stub
 		return pdao.findById(id).get();
 	}
 
 	@Override
 	public List<Product> findByCategoryID(String string) {
-		// TODO Auto-generated method stub
 		return pdao.findByCategoryID(string);
 	}
 
 	@Override
-	public Product create(Product product) {
-		// TODO Auto-generated method stub
-		return pdao.save(product);
+	public Product create(ProductDto productDto) {
+		Optional<Category> result = cdao.findById(productDto.getCategoryId());
+		if(result.isPresent()) {
+			Product product = modelMapper.convertEntityAndDto(productDto, Product.class);
+			product.setCategory(result.get());
+			return pdao.save(product);
+		}
+		return null;
+		
 	}
 
 	@Override
-	public Product update(Product product) {
-		// TODO Auto-generated method stub
-		return pdao.save(product);
+	public Product update(ProductDto productDto) {
+		Optional<Category> result = cdao.findById(productDto.getCategoryId());
+		if(result.isPresent()) {
+			Product product = modelMapper.convertEntityAndDto(productDto, Product.class);
+			product.setCategory(result.get());
+			return pdao.save(product);
+		}
+		return null;
 	}
 
 	@Override
 	public void delete(Integer id) {
-		// TODO Auto-generated method stub
 		 pdao.deleteById(id);
 	}
 }

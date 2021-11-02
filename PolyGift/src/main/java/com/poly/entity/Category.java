@@ -18,8 +18,8 @@ import lombok.Data;
 @Table(name = "Categories")
 public class Category implements Serializable {
 	@Id
-	String id;
-	String name;
+	Integer Id;
+	String Name;
 	@JsonIgnore
 	@OneToMany(mappedBy = "category")
 	List<Product> products;

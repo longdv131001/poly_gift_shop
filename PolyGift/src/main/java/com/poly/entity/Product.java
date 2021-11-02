@@ -20,8 +20,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
-
-
 @SuppressWarnings("serial")
 @Data
 @Entity 
@@ -29,16 +27,16 @@ import lombok.Data;
 public class Product  implements Serializable{
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer id;
-	String name;
-	String image;
-	Double price;
+	Integer Id;
+	String Name;
+	String Image;
+	Double Price;
 	@Temporal(TemporalType.DATE)
-	@Column(name = "Createdate")
-	Date createDate = new Date();
-	Boolean available;
+	@Column(name = "createdate")
+	Date CreateDate = new Date();
+	Boolean Available;
 	@ManyToOne
-	@JoinColumn(name = "Categoryid")
+	@JoinColumn(name = "categoryid")
 	Category category;
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")

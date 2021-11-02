@@ -5,10 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.poly.dao.AccountDAO;
-import com.poly.dao.AuthorityDAO;
 import com.poly.entity.Account;
 import com.poly.entity.Authority;
+import com.poly.repository.AccountDAO;
+import com.poly.repository.AuthorityDAO;
 import com.poly.service.AuthorityService;
 
 @Service

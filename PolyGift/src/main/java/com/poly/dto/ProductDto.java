@@ -3,8 +3,6 @@ package com.poly.dto;
 import java.util.Date;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,13 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDto {
-    Integer id;
-	String name;
-	String image;
-	Double price;
-	
-	Date createDate = new Date();
-	CategoryDto categoryDto;
+    Integer Id;
+	String Name;
+	String Image;
+	Double Price;
+	Boolean Available;
+	Date CreateDate = new Date();
+	Integer categoryId;
 
 	List<OrderDetailDto> orderDetailsDto;
 }

@@ -2,6 +2,7 @@ package com.poly.service;
 
 import java.util.List;
 
+import com.poly.dto.ProductDto;
 import com.poly.entity.Product;
 
 public interface ProductService {
@@ -12,9 +13,9 @@ public interface ProductService {
 
 	List<Product> findByCategoryID(String string);
 
-	Product create(Product product);
+	Product create(ProductDto productDto);
 
-	Product update(Product product);
+	Product update(ProductDto productDto);
 
 	void delete(Integer id);
 
