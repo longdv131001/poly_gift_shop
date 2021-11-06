@@ -21,13 +21,11 @@ public class AuthorityServiceImpl  implements AuthorityService{
 	
 	@Override
 	public List<Authority> findAll() {
-		// TODO Auto-generated method stub
 		return dao.findAll();
 	}
 
 	@Override
 	public Authority create(Authority auth) {
-		// TODO Auto-generated method stub
 		return dao.save(auth);
 	}
 

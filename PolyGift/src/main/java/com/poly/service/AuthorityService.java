@@ -10,13 +10,10 @@ public interface AuthorityService {
  
  public Authority create(Authority auth);
  
-// public void delete(In) {
-//	
-//}
 
  public	List<Authority> findAuthoritiesOfAdminstrators();
 
-public void delete(Integer id);
+ public void delete(Integer id);
 
 
 
