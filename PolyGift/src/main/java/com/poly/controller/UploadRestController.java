@@ -1,4 +1,4 @@
-package com.poly.rest.controller;
+package com.poly.controller;
 
 import java.io.File;
 

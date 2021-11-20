@@ -18,7 +18,9 @@ public class ProductDto {
 	String Image;
 	Double Price;
 	Boolean Available;
-	Date CreateDate = new Date();
+	Date CreateDate;
+	Integer Quantity;
+	String Description;
 	Category category;
 
 //	List<OrderDetailDto> orderDetailsDto;

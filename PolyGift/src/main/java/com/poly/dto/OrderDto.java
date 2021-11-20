@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class OrderDto {
     Long id;
 	String address;
-	Date createDate = new Date();
+	Date createDate;
 	AccountDto accountDto;
 	List<OrderDetailDto> orderDetailDtoList; ///
 }

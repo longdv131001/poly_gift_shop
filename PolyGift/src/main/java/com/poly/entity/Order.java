@@ -31,7 +31,7 @@ public class Order implements Serializable{
 		String address;
 		@Temporal(TemporalType.DATE)
 		@Column(name = "Createdate")
-		Date createDate = new Date();
+		Date createDate;
 		@ManyToOne
 		@JoinColumn(name = "Username")
 		Account account;

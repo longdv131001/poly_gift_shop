@@ -31,9 +31,11 @@ public class Product  implements Serializable{
 	String Name;
 	String Image;
 	Double Price;
+	Integer Quantity;
+	String Description;
 	@Temporal(TemporalType.DATE)
 	@Column(name = "createdate")
-	Date CreateDate = new Date();
+	Date CreateDate;
 	boolean available;
 	@ManyToOne
 	@JoinColumn(name = "categoryid")
