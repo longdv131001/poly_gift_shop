@@ -6,8 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.poly.Utils.ObjectMapperUtils;
-import com.poly.dto.ProductDto;
 import com.poly.entity.Category;
 import com.poly.entity.Product;
 import com.poly.repository.CategoryDAO;
@@ -19,8 +17,6 @@ public class ProductServiceImpl implements ProductService{
 	@Autowired
 	ProductDAO pdao;
 	
-	@Autowired
-	ObjectMapperUtils modelMapper;
 	
 	@Autowired
 	CategoryDAO cdao;
@@ -41,11 +37,10 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
-	public Product create(ProductDto productDto) {
-		Optional<Category> result = cdao.findById(productDto.getCategoryId());
-		if(result.isPresent()) {
-			Product product = modelMapper.convertEntityAndDto(productDto, Product.class);
-			product.setCategory(result.get());
+	public Product create(Product product) {
+		Optional<Category> cate = cdao.findById(product.getCategory().getId());
+		if(cate.isPresent()) {
+			product.setCategory(cate.get());
 			return pdao.save(product);
 		}
 		return null;
@@ -53,11 +48,12 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
-	public Product update(ProductDto productDto) {
-		Optional<Category> result = cdao.findById(productDto.getCategoryId());
-		if(result.isPresent()) {
-			Product product = modelMapper.convertEntityAndDto(productDto, Product.class);
-			product.setCategory(result.get());
+	public Product update(Product product) {
+		Optional<Product> p = pdao.findById(product.getId());
+		Optional<Category> cate = cdao.findById(product.getCategory().getId());
+		if(cate.isPresent() && p.isPresent()) {
+			product.setId(p.get().getId());
+			product.setCategory(cate.get());
 			return pdao.save(product);
 		}
 		return null;

@@ -2,7 +2,9 @@ package com.poly.rest.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,25 +29,29 @@ public class AccountRestController {
 	@Autowired
 	AccountService accountService;
 	
+	@Autowired
+	ModelMapper modelMapper;
 	
 	@GetMapping({"","{username}"})
-	public List<Account> findUserByUsername(@RequestParam("username") Optional<String> username) {
+	public List<AccountDto> findUserByUsername(@RequestParam("username") Optional<String> username) {
 		if(username.isPresent()) {
-			return accountService.findByUsername(username);
+			return accountService.findByUsername(username.get()).stream().map(a -> modelMapper.map(a, AccountDto.class)).collect(Collectors.toList());
 		}
 		else 
-			return accountService.findAll();
+			return accountService.findAll().stream().map(a -> modelMapper.map(a, AccountDto.class)).collect(Collectors.toList());
 		
 	}
 	
 	@PostMapping()
 	public AccountDto create(@RequestBody AccountDto accountDTO) {
-		return accountService.create(accountDTO);
+		Account account = modelMapper.map(accountDTO, Account.class);
+		return modelMapper.map(accountService.create(account),AccountDto.class );
 	}
 	
 	@PutMapping("{id}")
-	public AccountDto update(@PathVariable("id") String id,@RequestBody AccountDto accountDTO) {
-		return accountService.update( accountDTO);
+	public AccountDto update(@PathVariable("id") String username, @RequestBody AccountDto accountDTO) {
+		Account account = modelMapper.map(accountDTO, Account.class);
+		return modelMapper.map(accountService.update(account),AccountDto.class );
 	}
 	
 	@DeleteMapping("{id}")

@@ -2,13 +2,10 @@ package com.poly.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.poly.Utils.ObjectMapperUtils;
-import com.poly.dto.AccountDto;
 import com.poly.entity.Account;
 import com.poly.repository.AccountDAO;
 import com.poly.service.AccountService;
@@ -17,14 +14,12 @@ import com.poly.service.AccountService;
 public class AccountServiceImpl implements AccountService{
 	@Autowired
 	AccountDAO accountRepo;
-	@Autowired
-	private ObjectMapperUtils objectMapper;
 
 	public static List<Account> listAccount = new ArrayList<Account>();
 
 	@Override
-	public List<Account> findByUsername(Optional<String> username) {
-		return accountRepo.findByUsername(username.get());
+	public List<Account> findByUsername(String username) {
+		return accountRepo.findByUsername(username);
 	}
 
 	public List<Account> findAll() {
@@ -33,7 +28,7 @@ public class AccountServiceImpl implements AccountService{
 
 
 	@Override
-	public List<AccountDto> findAll(String sortDirection, String sortBy, int pageIndex, int pageSize) {
+	public List<Account> findAll(String sortDirection, String sortBy, int pageIndex, int pageSize) {
 		
 		return null;
 	}
@@ -50,19 +45,14 @@ public class AccountServiceImpl implements AccountService{
 	}
 
 	@Override
-	public AccountDto create(AccountDto cDto) {
-		Account account = objectMapper.convertEntityAndDto(cDto, Account.class);
-		accountRepo.save(account);
-		cDto.setUsername(account.getUsername());
-		return cDto;
+	public Account create(Account account) {
+		return accountRepo.save(account);
 	}
 
 	@Override
-	public AccountDto update(AccountDto cDto) {
-		Account account = objectMapper.convertEntityAndDto(cDto, Account.class);
-		account.setUsername(accountRepo.findById(account.getUsername()).get().getUsername());
-		accountRepo.save(account);
-		return cDto;
+	public Account update(Account account) {
+		
+		return accountRepo.save(account);
 	}
 		
 	

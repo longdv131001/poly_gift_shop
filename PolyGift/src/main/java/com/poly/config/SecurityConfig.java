@@ -1,4 +1,4 @@
-package com.poly;
+package com.poly.config;
 
 
 import java.util.NoSuchElementException;

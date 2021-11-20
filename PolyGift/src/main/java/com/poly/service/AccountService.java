@@ -1,24 +1,24 @@
 package com.poly.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.poly.dto.AccountDto;
 import com.poly.entity.Account;
 
 public interface AccountService {
-	List<Account> findByUsername(Optional<String> username);
+	List<Account> findByUsername(String username);
+	
 	Account findById(String username);
 
 	List<Account> findAll();
 
-	List<AccountDto> findAll(String sortDirection, String sortBy, int pageIndex, int pageSize);
+	List<Account> findAll(String sortDirection, String sortBy, int pageIndex, int pageSize);
 
 	boolean delete(String id);
 
-	AccountDto create(AccountDto cDto);
+	Account create(Account account);
 
-	AccountDto update(AccountDto cDto);
+	Account update(Account account);
 
 	List<Account> getAdministrators();
 }

@@ -1,7 +1,9 @@
 package com.poly.rest.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,25 +25,31 @@ import com.poly.service.ProductService;
 public class ProductRestController {
 	@Autowired
 	ProductService productService;
-
+	
+	@Autowired
+	ModelMapper modelMapper;
+	
 	@GetMapping()
-	public List<Product> getAll() {
-		return productService.findAll();
+	public List<ProductDto> getAll() {
+		return productService.findAll().stream().map(p -> modelMapper.map(p, ProductDto.class)).collect(Collectors.toList());
 	}
 
 	@GetMapping("{id}")
-	public Product getOne(@PathVariable("id") Integer id) {
-		return productService.findById(id);
+	public ProductDto getOne(@PathVariable("id") Integer id) {
+		Product product = productService.findById(id);
+		return modelMapper.map(product, ProductDto.class);
 	}
 
 	@PostMapping()
-	public Product create(@RequestBody ProductDto product) {
-		return productService.create(product);
+	public ProductDto create(@RequestBody ProductDto productDto) {
+		Product product = modelMapper.map(productDto, Product.class);
+		return modelMapper.map(productService.create(product), ProductDto.class);
 	}
 	
 	@PutMapping("{id}")
-	public Product update(@PathVariable("id") Integer id,@RequestBody ProductDto product) {
-		return productService.update(product);
+	public ProductDto update(@PathVariable("id") Integer id,@RequestBody ProductDto productDto) {
+		Product product = modelMapper.map(productDto, Product.class);
+		return modelMapper.map(productService.update(product), ProductDto.class);
 	}
 	
 	@DeleteMapping("{id}")

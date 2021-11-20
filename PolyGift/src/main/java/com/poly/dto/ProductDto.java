@@ -1,7 +1,8 @@
 package com.poly.dto;
 
 import java.util.Date;
-import java.util.List;
+
+import com.poly.entity.Category;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +19,7 @@ public class ProductDto {
 	Double Price;
 	Boolean Available;
 	Date CreateDate = new Date();
-	Integer categoryId;
+	Category category;
 
-	List<OrderDetailDto> orderDetailsDto;
+//	List<OrderDetailDto> orderDetailsDto;
 }

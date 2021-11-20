@@ -2,9 +2,12 @@ package com.poly.rest.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,24 +28,36 @@ public class CategoryRestController {
 	@Autowired
 	CategoryService categoryService;
 	
+	@Autowired
+	ModelMapper modelMapper;
+	
 	@GetMapping()
-	public List<Category> getAll() {
-		return categoryService.findAll();
+	public List<CategoryDto> getAll() {
+		return categoryService.findAll().stream().map(c -> modelMapper.map(c, CategoryDto.class)).collect(Collectors.toList());
 	}
 	
 	@PostMapping
-	public Category createCate(@RequestBody CategoryDto cate) {
-		return categoryService.create(cate);
+	public CategoryDto createCate(@RequestBody CategoryDto cateDto) {
+		Category category = modelMapper.map(cateDto, Category.class);
+		return modelMapper.map(categoryService.create(category), CategoryDto.class);
 	}
 	
 	@PutMapping("{id}")
-	public Category updateCate(@PathVariable("id") Optional<String> id,@RequestBody CategoryDto cate) {
-		return categoryService.update(cate);
+	public CategoryDto updateCate(@PathVariable("id") Optional<String> id,@RequestBody CategoryDto cateDto) {
+		Category category = modelMapper.map(cateDto, Category.class);
+		return modelMapper.map(categoryService.update(category), CategoryDto.class);
 		
 	}
 	
 	@GetMapping("{id}")
-	public Category findByCategoryId (@PathVariable("id") Integer id) {
-		return categoryService.findById(id);
+	public CategoryDto findByCategoryId (@PathVariable("id") Integer id) {
+		Category category =  categoryService.findById(id);
+		return modelMapper.map(category, CategoryDto.class);
 	}
+	
+	@DeleteMapping("{id}")
+	public void deleteById(@PathVariable("id") Integer id) {
+		categoryService.delete(id);
+	}
+	
 }
