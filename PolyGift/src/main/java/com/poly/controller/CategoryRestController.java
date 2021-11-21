@@ -42,8 +42,8 @@ public class CategoryRestController {
 		return modelMapper.map(categoryService.create(category), CategoryDto.class);
 	}
 	
-	@PutMapping("{id}")
-	public CategoryDto updateCate(@PathVariable("id") Optional<String> id,@RequestBody CategoryDto cateDto) {
+	@PutMapping()
+	public CategoryDto updateCate(@RequestBody CategoryDto cateDto) {
 		Category category = modelMapper.map(cateDto, Category.class);
 		return modelMapper.map(categoryService.update(category), CategoryDto.class);
 		
