@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService{
 		return order;
 	}
 	@Override
-	public Order findById(Long id) {
+	public Order findById(Integer id) {
 		// TODO Auto-generated method stub
 		return odao.findById(id).get();
 	}

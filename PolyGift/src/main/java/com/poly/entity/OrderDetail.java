@@ -19,13 +19,15 @@ import lombok.Data;
 public class OrderDetail  implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
-	Double price;
-	Integer quantity;
+	private Integer id;
+	private Double price;
+	private Integer quantity;
+	
 	@ManyToOne
 	@JoinColumn(name = "Productid")
-	Product product;
+	private Product product;
+	
 	@ManyToOne
 	@JoinColumn(name = "Orderid")
-	Order order;
+	private Order order;
 }

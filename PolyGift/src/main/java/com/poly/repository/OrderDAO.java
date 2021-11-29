@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.poly.entity.Order;
 
 @Repository
-public interface OrderDAO extends JpaRepository<Order, Long>{
+public interface OrderDAO extends JpaRepository<Order, Integer>{
 	@Query("SELECT o FROM Order o WHERE o.account.username=?1")
 	List<Order> findByUsername(String username);
 

@@ -2,7 +2,6 @@ package com.poly.service;
 
 import java.util.List;
 
-import com.poly.dto.AccountDto;
 import com.poly.entity.Account;
 
 public interface AccountService {

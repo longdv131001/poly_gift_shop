@@ -1,8 +1,5 @@
 package com.poly.dto;
 
-import java.util.Date;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,9 +7,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDto {
-    Long id;
-	String address;
-	Date createDate;
-	AccountDto accountDto;
-	List<OrderDetailDto> orderDetailDtoList; 
+    private Integer id;
+	private String address;
+	private String sdt;
+	private AccountDto accountDto;
+	
 }

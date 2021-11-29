@@ -1,8 +1,5 @@
 package com.poly.dto;
 
-import java.util.List;
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +15,5 @@ public class AccountDto {
 	String fullname;
 	String email;
 	String photo;
-//	List<OrderDto> orders;
-//	List<AuthorityDto> authoritiesDto;
+
 }

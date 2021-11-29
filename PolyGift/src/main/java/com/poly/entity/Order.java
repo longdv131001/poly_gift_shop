@@ -1,7 +1,6 @@
 package com.poly.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -27,16 +26,21 @@ import lombok.Data;
 public class Order implements Serializable{
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		Long id;
-		String address;
+		@Column(name="Id")
+		private Integer id;
+		
+		@Column(name="address")
+		private String address;
 		@Temporal(TemporalType.DATE)
-		@Column(name = "Createdate")
-		Date createDate;
+	
 		@ManyToOne
 		@JoinColumn(name = "Username")
-		Account account;
+		private Account account;
+		
+		@Column(name="Sdt")
+		private String sdt;
 		
 		@JsonIgnore
 		@OneToMany(mappedBy = "order")
-		List<OrderDetail> orderDetails;
+		private List<OrderDetail> orderDetails;
 }
