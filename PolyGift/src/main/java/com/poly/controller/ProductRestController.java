@@ -46,8 +46,8 @@ public class ProductRestController {
 		return modelMapper.map(productService.create(product), ProductDto.class);
 	}
 	
-	@PutMapping("{id}")
-	public ProductDto update(@PathVariable("id") Integer id,@RequestBody ProductDto productDto) {
+	@PutMapping()
+	public ProductDto update(@RequestBody ProductDto productDto) {
 		Product product = modelMapper.map(productDto, Product.class);
 		return modelMapper.map(productService.update(product), ProductDto.class);
 	}
