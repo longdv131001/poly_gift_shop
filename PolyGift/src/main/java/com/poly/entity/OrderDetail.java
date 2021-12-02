@@ -2,6 +2,7 @@ package com.poly.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,16 +19,21 @@ import lombok.Data;
 @Table(name = "Orderdetails")
 public class OrderDetail  implements Serializable{
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)	
+	@Column(name="Id")
 	private Integer id;
-	private Double price;
+	
+	@Column(name= "Price")
+	private Float price;
+	
+	@Column(name= "Quantity")
 	private Integer quantity;
 	
 	@ManyToOne
-	@JoinColumn(name = "Productid")
+	@JoinColumn(name = "ProductId")
 	private Product product;
 	
 	@ManyToOne
-	@JoinColumn(name = "Orderid")
+	@JoinColumn(name = "OrderId")
 	private Order order;
 }

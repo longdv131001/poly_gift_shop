@@ -10,9 +10,8 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class AuthorityDto {
     private Integer id;
-	private AccountDto accountDto;
-	private RoleDto roleDto;
+	private AccountDto account;
+	private RoleDto role;
 }

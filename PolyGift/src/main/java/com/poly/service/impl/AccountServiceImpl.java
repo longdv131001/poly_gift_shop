@@ -18,7 +18,7 @@ public class AccountServiceImpl implements AccountService{
 	public static List<Account> listAccount = new ArrayList<Account>();
 
 	@Override
-	public List<Account> findByUsername(String username) {
+	public Account findByUsername(String username) {
 		return accountRepo.findByUsername(username);
 	}
 

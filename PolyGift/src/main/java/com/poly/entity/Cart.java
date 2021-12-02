@@ -9,27 +9,34 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
 
-
-@SuppressWarnings("serial")
-@Data
 @Entity
-@Table(name = "Authorities" )
+@Data
+@Table(name="Cart")
+public class Cart implements Serializable {
 
-public class Authority implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="Id")
 	private Integer id;
 	
-	@ManyToOne 
-	@JoinColumn(name = "Username")
+	@Column(name="quantity")
+	private Integer quantity;
+	
+	@OneToOne
+	@JoinColumn(name = "username")
 	private Account account;
 	
-	@ManyToOne  
-	@JoinColumn(name = "RoleId")
-	private Role role;
+	@ManyToOne
+	@JoinColumn(name="productId")
+	private Product product;
 }

@@ -1,7 +1,6 @@
 package com.poly.controller;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -32,13 +31,18 @@ public class AccountRestController {
 	@Autowired
 	ModelMapper modelMapper;
 	
-	@GetMapping({"","{username}"})
-	public List<AccountDto> findUserByUsername(@RequestParam("username") Optional<String> username) {
-		if(username.isPresent()) {
-			return accountService.findByUsername(username.get()).stream().map(a -> modelMapper.map(a, AccountDto.class)).collect(Collectors.toList());
-		}
-		else 
-			return accountService.findAll().stream().map(a -> modelMapper.map(a, AccountDto.class)).collect(Collectors.toList());
+	@GetMapping 
+	public List<AccountDto> getAllAccounts(){
+		return accountService.findAll().stream().map(a -> modelMapper.map(a, AccountDto.class)).collect(Collectors.toList());
+	}
+	
+	@GetMapping({"{username}"})
+	public AccountDto findUserByUsername(@RequestParam("username") String username) {
+		Account a = accountService.findByUsername(username);
+		return modelMapper.map(a, AccountDto.class);
+	
+		
+			
 		
 	}
 	

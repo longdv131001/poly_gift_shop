@@ -5,7 +5,7 @@ import java.util.List;
 import com.poly.entity.Account;
 
 public interface AccountService {
-	List<Account> findByUsername(String username);
+	Account findByUsername(String username);
 	
 	Account findById(String username);
 
