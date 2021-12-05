@@ -27,22 +27,22 @@ import lombok.Data;
 public class Product  implements Serializable{
 	@Id	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Integer Id;
-	String Name;
-	String Image;
-	Double Price;
-	Integer Quantity;
-	String Description;
+	private Integer Id;
+	private String Name;
+	private String Image;
+	private Double Price;
+	private Integer Quantity;
+	private String Description;
 	@Temporal(TemporalType.DATE)
 	@Column(name = "createdate")
-	Date CreateDate;
-	boolean available;
+	private Date CreateDate;
+	private boolean available;
 	@ManyToOne
 	@JoinColumn(name = "categoryid")
-	Category category;
+	private Category category;
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")
-	List<OrderDetail> orderDetails;	
+	private List<OrderDetail> orderDetails;	
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "product")

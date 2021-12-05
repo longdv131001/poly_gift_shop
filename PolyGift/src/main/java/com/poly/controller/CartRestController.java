@@ -23,6 +23,7 @@ import com.poly.service.CartService;
 @CrossOrigin("*")
 @RequestMapping("/rest/cart")
 public class CartRestController {
+	
 	@Autowired
 	private CartService cartService;
 	
@@ -30,8 +31,8 @@ public class CartRestController {
 	private ModelMapper modelMapper;
 	
 	@GetMapping
-	public List<CartDTO> getAll (){
-		return cartService.getAll().stream().map(c -> modelMapper.map(c, CartDTO.class)).collect(Collectors.toList());
+	public List<CartDTO> getAllByUsername (){
+		return cartService.getCartByUsername().stream().map(c -> modelMapper.map(c, CartDTO.class)).collect(Collectors.toList());
 	}
 	
 	@PostMapping
@@ -47,9 +48,9 @@ public class CartRestController {
 		return modelMapper.map(cartService.updateCart(cart), CartDTO.class);
 	}
 	
-	@DeleteMapping("{id}")
-	public void deleteCart(@PathVariable("id") Integer id) {
-		cartService.deleteCart(id);
+	@DeleteMapping("{username}")
+	public void deleteCart(@PathVariable("username") String username) {
+		cartService.deleteCartByUsername(username);
 	}
 	
 

@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.poly.entity.Account;
+import com.poly.dto.AppUser;
 import com.poly.entity.Cart;
 import com.poly.entity.Product;
 import com.poly.repository.AccountDAO;
@@ -18,27 +21,37 @@ import com.poly.service.CartService;
 public class CartServiceImpl implements CartService {
 
 	@Autowired
-	private CartRepository cartRepo;
-	
+	private CartRepository cartRepository;
+
 	@Autowired
 	private AccountDAO accRepo;
-	
+
 	@Autowired
 	private ProductDAO pRepo;
-	
+
 	@Override
-	public List<Cart> getAll() {
-		return cartRepo.findAll();
+	public List<Cart> getCartByUsername() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			AppUser principal = (AppUser) auth.getPrincipal();
+			String username = principal.getUsername();
+			return cartRepository.findByUsername(username);
+		}
+		return null;
 	}
 
 	@Override
 	public Cart createCart(Cart cart) {
 		Optional<Product> product = pRepo.findById(cart.getProduct().getId());
-		Optional<Account> account = accRepo.findById(cart.getAccount().getUsername());
-		if(product.isPresent() && account.isPresent()) {
-			cart.setAccount(account.get());
-			cart.setProduct(product.get());
-			return cartRepo.save(cart);
+		if (product.isPresent()) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if (!(auth instanceof AnonymousAuthenticationToken)) {
+				AppUser principal = (AppUser) auth.getPrincipal();
+				String username = principal.getUsername();
+				cart.setAccount(accRepo.findByUsername(username));
+				cart.setProduct(product.get());
+				return cartRepository.save(cart);
+			}
 		}
 		return null;
 	}
@@ -46,30 +59,33 @@ public class CartServiceImpl implements CartService {
 	@Override
 	public Cart updateCart(Cart cart) {
 		Optional<Product> product = pRepo.findById(cart.getProduct().getId());
-		Optional<Account> account = accRepo.findById(cart.getAccount().getUsername());
-		if(product.isPresent() && account.isPresent()) {
-			cart.setAccount(account.get());
-			cart.setProduct(product.get());
-			return cartRepo.save(cart);
+		if (product.isPresent()) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if (!(auth instanceof AnonymousAuthenticationToken)) {
+				AppUser principal = (AppUser) auth.getPrincipal();
+				String username = principal.getUsername();
+				cart.setAccount(accRepo.findByUsername(username));
+				cart.setProduct(product.get());
+				cart.setQuantity(cart.getQuantity());
+				return cartRepository.save(cart);
+			}
 		}
 		return null;
 	}
 
 	@Override
-	public void deleteCart(Integer id) {
-		cartRepo.deleteById(id);
-		
-	}
-
-	@Override
-	public void deleteAllCart() {
-		cartRepo.deleteAll();
+	public void deleteCartByUsername(String username) {
+		cartRepository.deleteByUsername(username);
 		
 	}
 
 	@Override
 	public Cart findById(Integer id) {
-		return cartRepo.findById(id).get();
+		return cartRepository.findById(id).get();
 	}
-	
+
+
+
+
+
 }

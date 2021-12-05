@@ -40,6 +40,7 @@ public class ProductServiceImpl implements ProductService{
 	public Product create(Product product) {
 		Optional<Category> cate = cdao.findById(product.getCategory().getId());
 		if(cate.isPresent()) {
+			product.setName(product.getName());
 			product.setCategory(cate.get());
 			return pdao.save(product);
 		}
