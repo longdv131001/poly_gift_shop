@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.poly.dto.AppUser;
+
 import com.poly.entity.Cart;
 import com.poly.entity.Product;
 import com.poly.repository.AccountDAO;
@@ -33,8 +33,7 @@ public class CartServiceImpl implements CartService {
 	public List<Cart> getCartByUsername() {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			AppUser principal = (AppUser) auth.getPrincipal();
-			String username = principal.getUsername();
+			String username = auth.getName();
 			return cartRepository.findByUsername(username);
 		}
 		return null;
@@ -46,8 +45,7 @@ public class CartServiceImpl implements CartService {
 		if (product.isPresent()) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			if (!(auth instanceof AnonymousAuthenticationToken)) {
-				AppUser principal = (AppUser) auth.getPrincipal();
-				String username = principal.getUsername();
+				String username = auth.getName();
 				cart.setAccount(accRepo.findByUsername(username));
 				cart.setProduct(product.get());
 				return cartRepository.save(cart);
@@ -62,8 +60,7 @@ public class CartServiceImpl implements CartService {
 		if (product.isPresent()) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			if (!(auth instanceof AnonymousAuthenticationToken)) {
-				AppUser principal = (AppUser) auth.getPrincipal();
-				String username = principal.getUsername();
+				String username = auth.getName();
 				cart.setAccount(accRepo.findByUsername(username));
 				cart.setProduct(product.get());
 				cart.setQuantity(cart.getQuantity());
