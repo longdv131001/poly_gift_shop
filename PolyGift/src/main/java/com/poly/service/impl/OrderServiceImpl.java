@@ -3,7 +3,11 @@ package com.poly.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.poly.repository.AccountDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -20,18 +24,39 @@ public class OrderServiceImpl implements OrderService{
 	@Autowired
 	OrderDAO odao;
 	@Autowired
-	OrderDetailDAO ddao;
+	AccountDAO accountDAO;
+
 	@Override
-	public Order create(JsonNode orderdata) {
-		ObjectMapper mapper=new ObjectMapper();
-		Order order=mapper.convertValue(orderdata,Order.class);
-		odao.save(order);
-		TypeReference<List<OrderDetail>> type=new TypeReference<List<OrderDetail>>() {};
-		List<OrderDetail> details=mapper.convertValue(orderdata.get("orderDetails"),type)
-				.stream().peek(d->d.setOrder(order)).collect(Collectors.toList());
-		ddao.saveAll(details);
-		return order;
+	public List<Order> getAllOrder() {
+		return odao.findAll();
 	}
+
+	@Override
+	public Order create(Order order) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			String username = auth.getName();
+			order.setAddress(order.getAddress());
+			order.setSdt(order.getSdt());
+			order.setAccount(accountDAO.findByUsername(username));
+			return odao.save(order);
+		}
+		return null;
+	}
+
+	@Override
+	public Order update(Order order) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (!(auth instanceof AnonymousAuthenticationToken)) {
+			String username = auth.getName();
+			order.setAddress(order.getAddress());
+			order.setSdt(order.getSdt());
+			order.setAccount(accountDAO.findByUsername(username));
+			return odao.save(order);
+		}
+		return null;
+	}
+
 	@Override
 	public Order findById(Integer id) {
 		// TODO Auto-generated method stub
@@ -43,7 +68,10 @@ public class OrderServiceImpl implements OrderService{
 		return odao.findByUsername(username);
 	}
 
-
+	@Override
+	public void delete(Integer id) {
+		odao.deleteById(id);
+	}
 
 
 }

@@ -1,15 +1,16 @@
 package com.poly.controller;
 
+import com.poly.dto.OrderDto;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poly.entity.Order;
 import com.poly.service.OrderService;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin("*")
@@ -18,9 +19,30 @@ import com.poly.service.OrderService;
 public class OrderRestController {
 	@Autowired
 	OrderService orderService;
-	
+
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@GetMapping
+	public List<OrderDto> getAllOrder(){
+		return orderService.getAllOrder().stream().map(o -> modelMapper.map(o,OrderDto.class)).collect(Collectors.toList());
+	}
+
 	@PostMapping()
-	public Order create(@RequestBody JsonNode orderdata) {
-		return orderService.create(orderdata);
+	public OrderDto createOrder(@RequestBody OrderDto orderDto) {
+		Order order = modelMapper.map(orderDto,Order.class);
+		return modelMapper.map(orderService.create(order),OrderDto.class);
+	}
+
+	@PutMapping("{id}")
+	public OrderDto updateOrder(@PathVariable("id") Integer id,@RequestBody OrderDto orderDto) {
+		Order order =  orderService.findById(id);
+		modelMapper.map(orderDto,Order.class);
+		return modelMapper.map(orderService.update(order),OrderDto.class);
+	}
+
+	@DeleteMapping("{id}")
+	public void deleteOrder(@PathVariable("id") Integer id){
+		orderService.delete(id);
 	}
 }
