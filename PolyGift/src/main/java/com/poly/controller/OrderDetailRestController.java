@@ -5,12 +5,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.poly.dto.OrderDetailDto;
 import com.poly.entity.OrderDetail;
@@ -30,10 +25,29 @@ public class OrderDetailRestController {
 	public List<OrderDetailDto> getAllOrderDetail(){
 		return orderDetailService.getAllOrderDetails().stream().map(o -> modelMapper.map(o, OrderDetailDto.class)).collect(Collectors.toList());
 	}
-	
-	@PostMapping("{id}")
+
+	@GetMapping("{id}")
 	public OrderDetailDto getByOrderDetailId(@PathVariable("id") Integer id) {
 		OrderDetail orderDetail = orderDetailService.getById(id);
 		return modelMapper.map(orderDetail, OrderDetailDto.class);
 	}
+
+	@PostMapping
+	public OrderDetailDto createOrderDetail(@RequestBody OrderDetailDto orderDetailDto){
+		OrderDetail orderDetail = modelMapper.map(orderDetailDto,OrderDetail.class);
+		return modelMapper.map(orderDetailService.createOrderDetail(orderDetail),OrderDetailDto.class);
+	}
+
+	@PutMapping("{id}")
+	public OrderDetailDto updateOrderDetail(@PathVariable("id")Integer id,@RequestBody OrderDetailDto orderDetailDto){
+		OrderDetail orderDetail = orderDetailService.getById(id);
+		modelMapper.map(orderDetailDto,OrderDetail.class);
+		return modelMapper.map(orderDetailService.updateOrderDetail(orderDetail),OrderDetailDto.class);
+	}
+
+	@DeleteMapping("{id}")
+	public void deleteOrderDetail(@PathVariable("id") Integer id){
+		orderDetailService.delete(id);
+	}
+
 }
