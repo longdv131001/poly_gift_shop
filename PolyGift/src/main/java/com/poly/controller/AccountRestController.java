@@ -36,12 +36,10 @@ public class AccountRestController {
 		return accountService.findAll().stream().map(a -> modelMapper.map(a, AccountDto.class)).collect(Collectors.toList());
 	}
 	
-	@GetMapping({"{username}"})
-	public AccountDto findUserByUsername(@RequestParam("username") String username) {
+	@GetMapping("/username")
+	public AccountDto findUserByUsername(@RequestParam String username) {
 		Account a = accountService.findByUsername(username);
 		return modelMapper.map(a, AccountDto.class);
-	
-		
 			
 		
 	}

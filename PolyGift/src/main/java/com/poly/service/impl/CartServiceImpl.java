@@ -63,7 +63,6 @@ public class CartServiceImpl implements CartService {
 				String username = auth.getName();
 				cart.setAccount(accRepo.findByUsername(username));
 				cart.setProduct(product.get());
-				cart.setQuantity(cart.getQuantity());
 				return cartRepository.save(cart);
 			}
 		}
@@ -81,8 +80,17 @@ public class CartServiceImpl implements CartService {
 		return cartRepository.findById(id).get();
 	}
 
+	@Override
+	public void deleteCartById(Integer id) {
+		 cartRepository.deleteById(id);
+	}
 
-
+	@Override
+	public Cart findByProductId(Integer idProduct) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String username = auth.getName();
+		return cartRepository.findByProductId(idProduct, username);
+	}
 
 
 }

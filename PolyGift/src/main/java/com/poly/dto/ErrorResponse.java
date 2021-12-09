@@ -1,5 +1,8 @@
 package com.poly.dto;
 
+import lombok.Builder;
+
+@Builder
 public class ErrorResponse {
 	private int errorCode;
     private String message;

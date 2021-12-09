@@ -7,5 +7,4 @@ public class CartDTO {
 	private Integer id;
 	private ProductDto product;
 	private Integer quantity;
-	private AccountDto account;
 }

@@ -14,8 +14,11 @@ import com.poly.dto.ErrorResponse;
 @ControllerAdvice
 public class ApplicationExceptionHandler {
     private ResponseEntity<ErrorResponse> buildErrorResponse(String errorMessage, HttpStatus status) {
-        ErrorResponse error = new ErrorResponse(status.value(), errorMessage);
-        return new ResponseEntity<>(error, status);
+        return ResponseEntity.ok(ErrorResponse.builder()
+                .errorCode(status.value())
+                .message(errorMessage).build()
+        );
+
     }
 	@ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> exceptionHandler(Exception e) {

@@ -1,5 +1,8 @@
 package com.poly.dto;
 
+import lombok.Builder;
+
+
 public class AppException extends RuntimeException {
 
 	/**

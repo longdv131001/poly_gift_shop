@@ -10,4 +10,8 @@ public interface CartService {
 	List<Cart> getCartByUsername();
 	void deleteCartByUsername(String username);
 	Cart findById(Integer id);
+
+	void deleteCartById(Integer id);
+
+	Cart findByProductId(Integer idProduct);
 }

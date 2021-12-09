@@ -55,12 +55,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		httpSecurity.csrf().disable() // We don't need CSRF for this example
 				.authorizeRequests().antMatchers("/authenticate").permitAll().and()
-				.authorizeRequests()
-				.antMatchers("/accounts/*").hasAuthority("Admin")
-				.antMatchers("/products/*").hasAuthority("Admin")
-				.antMatchers("/categories/*").hasAuthority("Admin")
-				.anyRequest().authenticated().and()
-
 				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
 				.accessDeniedHandler(customAccessDeniedHandler).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().cors(); // Make sure we use stateless

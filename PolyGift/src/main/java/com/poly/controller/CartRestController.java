@@ -3,17 +3,11 @@ package com.poly.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.poly.dto.ProductDto;
+import com.poly.entity.Product;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.poly.dto.CartDTO;
 import com.poly.entity.Cart;
@@ -41,19 +35,25 @@ public class CartRestController {
 		return modelMapper.map(cartService.createCart(cart),CartDTO.class );
 	}
 	
-	@PutMapping("{id}")
-	public CartDTO updateToCart(@PathVariable("id") Integer id,@RequestBody CartDTO cartDTO) {
-		Cart cart = cartService.findById(id);
-		modelMapper.map(cartDTO, Cart.class);
+	@PutMapping()
+	public CartDTO updateToCart(@RequestBody CartDTO cartDTO) {
+		Cart cart = modelMapper.map(cartDTO, Cart.class);
 		return modelMapper.map(cartService.updateCart(cart), CartDTO.class);
 	}
 	
-	@DeleteMapping("{username}")
+	@DeleteMapping("username/{username}")
 	public void deleteCart(@PathVariable("username") String username) {
 		cartService.deleteCartByUsername(username);
 	}
-	
 
-	
-	
+	@DeleteMapping("id/{id}")
+	public void deleteById(@PathVariable("id") Integer id) {
+		cartService.deleteCartById(id);
+	}
+
+	@GetMapping("product")
+	public CartDTO getByProductId(@RequestParam("id") Integer id){
+		Cart cart = cartService.findByProductId(id);
+		return modelMapper.map(cart, CartDTO.class);
+	}
 }
