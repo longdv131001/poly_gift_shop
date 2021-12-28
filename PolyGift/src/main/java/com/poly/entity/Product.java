@@ -36,7 +36,7 @@ public class Product  implements Serializable{
 	@Temporal(TemporalType.DATE)
 	@Column(name = "createdate")
 	private Date CreateDate;
-	private boolean available;
+	private boolean Available;
 	@ManyToOne
 	@JoinColumn(name = "categoryid")
 	private Category category;

@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,10 +29,15 @@ public class ProductRestController {
 	
 	@Autowired
 	ModelMapper modelMapper;
-	
-	@GetMapping()
+
+	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
+	@GetMapping("/list")
 	public List<ProductDto> getAll() {
 		return productService.findAll().stream().map(p -> modelMapper.map(p, ProductDto.class)).collect(Collectors.toList());
+	}
+	@GetMapping("/list/user")
+	public List<ProductDto> getAllProductAvailable() {
+		return productService.findAllProductAvailable().stream().map(p -> modelMapper.map(p, ProductDto.class)).collect(Collectors.toList());
 	}
 
 	@GetMapping("{id}")
@@ -52,8 +58,9 @@ public class ProductRestController {
 		return modelMapper.map(productService.update(product), ProductDto.class);
 	}
 	
-	@DeleteMapping("{id}")
-	public void delete(@PathVariable("id") Integer id) {
-		 productService.delete(id);
+	@DeleteMapping("/{id}")
+	public ProductDto disableProduct(@PathVariable("id") Integer id) {
+		Product product = productService.disableProduct(id);
+		return modelMapper.map(product,ProductDto.class);
 	}
 }

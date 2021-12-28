@@ -8,6 +8,8 @@ public interface ProductService {
 
 	List<Product> findAll();
 
+	List<Product> findAllProductAvailable();
+
 	Product findById(Integer id);
 
 	List<Product> findByCategoryID(String string);
@@ -16,7 +18,7 @@ public interface ProductService {
 
 	Product update(Product product);
 
-	void delete(Integer id);
+	Product disableProduct(Integer id);
 
 
 

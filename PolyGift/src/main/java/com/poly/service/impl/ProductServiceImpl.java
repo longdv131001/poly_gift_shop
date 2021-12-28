@@ -27,6 +27,11 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
+	public List<Product> findAllProductAvailable() {
+		return pdao.findAllProductAvailable();
+	}
+
+	@Override
 	public Product findById(Integer id) {
 		return pdao.findById(id).get();
 	}
@@ -42,6 +47,7 @@ public class ProductServiceImpl implements ProductService{
 		if(cate.isPresent()) {
 			product.setName(product.getName());
 			product.setCategory(cate.get());
+			product.setAvailable(true);
 			return pdao.save(product);
 		}
 		return null;
@@ -61,7 +67,14 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
-	public void delete(Integer id) {
-		 pdao.deleteById(id);
+	public Product disableProduct(Integer id) {
+		Optional<Product> p =  pdao.findById(id);
+		if (p.isPresent()){
+			p.get().setAvailable(false);
+			return  pdao.save(p.get());
+		}
+		return null;
 	}
+
+
 }

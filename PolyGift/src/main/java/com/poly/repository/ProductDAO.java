@@ -11,6 +11,8 @@ import com.poly.entity.Product;
 @Repository
 public interface ProductDAO extends JpaRepository<Product, Integer>{
 	@Query("SELECT p FROM Product p WHERE p.category.id=?1")
-	List<Product> findByCategoryID(String string);
+	List<Product> findByCategoryID(String id);
 
+	@Query("SELECT p FROM Product p WHERE p.Available = true ")
+	List<Product> findAllProductAvailable();
 }
