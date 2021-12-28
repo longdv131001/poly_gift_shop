@@ -3,6 +3,7 @@ package com.poly.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -56,8 +57,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.csrf().disable() // We don't need CSRF for this example
 				.authorizeRequests().antMatchers("/rest/accounts/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
 				.antMatchers("/rest/authorities/**").hasAuthority("Admin")
-				.antMatchers("/rest/categories/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
-				.antMatchers("/rest/products/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
+				.antMatchers(HttpMethod.POST,"/rest/categories/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
+				.antMatchers(HttpMethod.PUT,"/rest/categories/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
+				.antMatchers(HttpMethod.DELETE,"/rest/categories/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
+				.antMatchers(HttpMethod.POST,"/rest/products/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
+				.antMatchers(HttpMethod.PUT,"/rest/products/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
+				.antMatchers(HttpMethod.DELETE,"/rest/products/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
 				.antMatchers("/rest/orders/**").permitAll()
 				.antMatchers("/rest/orderdetails/**").permitAll()
 				.antMatchers("/rest/cart/**").permitAll()
