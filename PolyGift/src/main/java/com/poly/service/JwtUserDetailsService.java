@@ -30,7 +30,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 				String[] roles = a.getAuthorities().stream()
 						.map(e -> e.getRole().getName())
 						.collect(Collectors.toList()).toArray(new String [0]);
-				return User.withUsername(username).password(new BCryptPasswordEncoder().encode(password)).roles(roles).build();
+				return User.withUsername(username).password(password).roles(roles).build();
 			} catch (NoSuchElementException e) {
 				throw new UsernameNotFoundException(username + "not found");
 				

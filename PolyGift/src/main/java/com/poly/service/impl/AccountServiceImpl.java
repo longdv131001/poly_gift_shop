@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.poly.entity.Account;
@@ -14,6 +15,9 @@ import com.poly.service.AccountService;
 public class AccountServiceImpl implements AccountService{
 	@Autowired
 	AccountDAO accountRepo;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	public static List<Account> listAccount = new ArrayList<Account>();
 
@@ -26,14 +30,6 @@ public class AccountServiceImpl implements AccountService{
 		return accountRepo.findAll();
 	}
 
-
-	@Override
-	public List<Account> findAll(String sortDirection, String sortBy, int pageIndex, int pageSize) {
-		
-		return null;
-	}
-
-	
 	@Override
 	public boolean delete(String id) {
 		Account account = accountRepo.getById(id);
@@ -46,12 +42,19 @@ public class AccountServiceImpl implements AccountService{
 
 	@Override
 	public Account create(Account account) {
+		account.setUsername(account.getUsername());
+		account.setPassword(passwordEncoder.encode(account.getPassword()));
+		account.setFullname(account.getFullname());
+		account.setEmail(account.getEmail());
 		return accountRepo.save(account);
 	}
 
 	@Override
 	public Account update(Account account) {
-		
+		account.setUsername(account.getUsername());
+		account.setPassword(passwordEncoder.encode(account.getPassword()));
+		account.setFullname(account.getFullname());
+		account.setEmail(account.getEmail());
 		return accountRepo.save(account);
 	}
 		

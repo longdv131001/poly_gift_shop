@@ -11,8 +11,6 @@ public interface AccountService {
 
 	List<Account> findAll();
 
-	List<Account> findAll(String sortDirection, String sortBy, int pageIndex, int pageSize);
-
 	boolean delete(String id);
 
 	Account create(Account account);

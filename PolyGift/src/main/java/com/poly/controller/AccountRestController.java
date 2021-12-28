@@ -30,7 +30,8 @@ public class AccountRestController {
 	
 	@Autowired
 	ModelMapper modelMapper;
-	
+
+
 	@GetMapping 
 	public List<AccountDto> getAllAccounts(){
 		return accountService.findAll().stream().map(a -> modelMapper.map(a, AccountDto.class)).collect(Collectors.toList());
