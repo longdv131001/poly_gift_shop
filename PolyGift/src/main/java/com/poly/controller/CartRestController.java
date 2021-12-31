@@ -41,9 +41,9 @@ public class CartRestController {
 		return modelMapper.map(cartService.updateCart(cart), CartDTO.class);
 	}
 	
-	@DeleteMapping("username/{username}")
-	public void deleteCart(@PathVariable("username") String username) {
-		cartService.deleteCartByUsername(username);
+	@DeleteMapping("username")
+	public void deleteCart() {
+		cartService.deleteCartByUsername();
 	}
 
 	@DeleteMapping("id/{id}")

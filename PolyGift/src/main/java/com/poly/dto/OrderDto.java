@@ -11,5 +11,5 @@ public class OrderDto {
 	private String address;
 	private String sdt;
 	private AccountDto accountDto;
-	
+	private String fullname;
 }

@@ -39,7 +39,10 @@ public class Order implements Serializable{
 		
 		@Column(name="Sdt")
 		private String sdt;
-		
+
+		@Column(name="fullname")
+		private String fullname;
+
 		@JsonIgnore
 		@OneToMany(mappedBy = "order")
 		private List<OrderDetail> orderDetails;

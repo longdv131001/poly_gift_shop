@@ -55,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 
 		httpSecurity.csrf().disable() // We don't need CSRF for this example
-				.authorizeRequests().antMatchers("/rest/accounts/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
+				.authorizeRequests()
 				.antMatchers("/rest/authorities/**").hasAuthority("Admin")
 				.antMatchers(HttpMethod.POST,"/rest/categories/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
 				.antMatchers(HttpMethod.PUT,"/rest/categories/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
