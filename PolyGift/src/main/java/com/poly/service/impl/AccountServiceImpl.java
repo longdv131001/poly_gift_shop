@@ -2,6 +2,7 @@ package com.poly.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,14 +32,15 @@ public class AccountServiceImpl implements AccountService{
 	}
 
 	@Override
-	public boolean delete(String id) {
-		Account account = accountRepo.getById(id);
-		if (account != null) {
-			accountRepo.deleteById(id);
-			return true;
+	public Account disableUser(String username) {
+		Optional<Account> account = accountRepo.findById(username);
+		if (account.isPresent()){
+			account.get().setDisable(true);
+			return  accountRepo.save(account.get());
 		}
-		return false;
+		return null;
 	}
+
 
 	@Override
 	public Account create(Account account) {
@@ -46,6 +48,7 @@ public class AccountServiceImpl implements AccountService{
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		account.setFullname(account.getFullname());
 		account.setEmail(account.getEmail());
+		account.setDisable(false);
 		return accountRepo.save(account);
 	}
 
@@ -55,6 +58,7 @@ public class AccountServiceImpl implements AccountService{
 		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		account.setFullname(account.getFullname());
 		account.setEmail(account.getEmail());
+		account.setDisable(account.isDisable());
 		return accountRepo.save(account);
 	}
 		

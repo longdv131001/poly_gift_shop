@@ -34,6 +34,10 @@ public class Account implements Serializable {
 	
 	@Column(name="Email")
 	private String email;
+
+	@Column(name = "disable", nullable = false)
+	private boolean isDisable;
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "account")
 	List<Order> orders;
