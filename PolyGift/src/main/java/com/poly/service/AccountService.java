@@ -11,7 +11,7 @@ public interface AccountService {
 
 	List<Account> findAll();
 
-	boolean delete(String id);
+	Account disableUser(String username);
 
 	Account create(Account account);
 

@@ -14,5 +14,6 @@ public class AccountDto {
     private String password;
     private String fullname;
     private String email;
+    private boolean isDisable;
 
 }

@@ -37,8 +37,8 @@ public class AccountRestController {
 		return accountService.findAll().stream().map(a -> modelMapper.map(a, AccountDto.class)).collect(Collectors.toList());
 	}
 	
-	@GetMapping("/username")
-	public AccountDto findUserByUsername(@RequestParam String username) {
+	@GetMapping("/{username}")
+	public AccountDto findUserByUsername(@PathVariable String username) {
 		Account a = accountService.findByUsername(username);
 		return modelMapper.map(a, AccountDto.class);
 			
@@ -58,8 +58,9 @@ public class AccountRestController {
 	}
 	
 	@DeleteMapping("{id}")
-	public void delete(@PathVariable("id") String id) {
-		accountService.delete(id);
+	public AccountDto disableUser(@PathVariable("id") String id) {
+		Account account = accountService.disableUser(id);
+		return  modelMapper.map(account,AccountDto.class);
 	}
 
 }
