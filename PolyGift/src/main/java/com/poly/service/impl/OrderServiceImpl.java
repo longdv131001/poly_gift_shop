@@ -1,5 +1,6 @@
 package com.poly.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +40,11 @@ public class OrderServiceImpl implements OrderService{
 			order.setAddress(order.getAddress());
 			order.setSdt(order.getSdt());
 			order.setAccount(accountDAO.findByUsername(username));
+			order.setOrderStatus(0);
+			order.setNote(order.getNote());
+			order.setTotal(order.getTotal());
+			order.setCreatedDate(LocalDateTime.now());
+			order.setUpdatedDate(LocalDateTime.now());
 			return odao.save(order);
 		}
 		return null;
@@ -52,6 +58,12 @@ public class OrderServiceImpl implements OrderService{
 			order.setAddress(order.getAddress());
 			order.setSdt(order.getSdt());
 			order.setAccount(accountDAO.findByUsername(username));
+			order.setOrderStatus(0);
+			order.setNote(order.getNote());
+			order.setTotal(order.getTotal());
+			order.setCreatedDate(LocalDateTime.now());
+			order.setUpdatedDate(LocalDateTime.now());
+			order.setFullname(order.getFullname());
 			return odao.save(order);
 		}
 		return null;

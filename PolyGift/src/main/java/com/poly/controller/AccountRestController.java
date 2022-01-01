@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class AccountRestController {
 	@Autowired
 	ModelMapper modelMapper;
 
-
+	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
 	@GetMapping 
 	public List<AccountDto> getAllAccounts(){
 		return accountService.findAll().stream().map(a -> modelMapper.map(a, AccountDto.class)).collect(Collectors.toList());
@@ -44,19 +45,22 @@ public class AccountRestController {
 			
 		
 	}
-	
+
+	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
 	@PostMapping()
 	public AccountDto create(@RequestBody AccountDto accountDTO) {
 		Account account = modelMapper.map(accountDTO, Account.class);
 		return modelMapper.map(accountService.create(account),AccountDto.class );
 	}
-	
+
+	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
 	@PutMapping("{id}")
 	public AccountDto update(@PathVariable("id") String username, @RequestBody AccountDto accountDTO) {
 		Account account = modelMapper.map(accountDTO, Account.class);
 		return modelMapper.map(accountService.update(account),AccountDto.class );
 	}
-	
+
+	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
 	@DeleteMapping("{id}")
 	public AccountDto disableUser(@PathVariable("id") String id) {
 		Account account = accountService.disableUser(id);

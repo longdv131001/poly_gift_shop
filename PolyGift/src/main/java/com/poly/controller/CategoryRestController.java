@@ -34,7 +34,8 @@ public class CategoryRestController {
 	public List<CategoryDto> getAll() {
 		return categoryService.findAll().stream().map(c -> modelMapper.map(c, CategoryDto.class)).collect(Collectors.toList());
 	}
-	
+
+
 	@PostMapping
 	public CategoryDto createCate(@RequestBody CategoryDto cateDto) {
 		Category category = modelMapper.map(cateDto, Category.class);

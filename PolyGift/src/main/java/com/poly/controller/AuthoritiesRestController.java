@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,8 @@ public class AuthoritiesRestController {
 	
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
+	@PreAuthorize("hasAuthority('Admin')")
 	@GetMapping
 	public List<AuthorityDto> findAll(@RequestParam("admin") Optional<Boolean> admin) {
 		if (admin.orElse(false)) {
@@ -38,12 +40,14 @@ public class AuthoritiesRestController {
 		return authorityService.findAll().stream().map(au -> modelMapper.map(au, AuthorityDto.class)).collect(Collectors.toList());
 	}
 
+	@PreAuthorize("hasAuthority('Admin')")
 	@PostMapping
 	public AuthorityDto save(@RequestBody AuthorityDto authorityDto) {
 		Authority auth = modelMapper.map(authorityDto, Authority.class);
 		return modelMapper.map(authorityService.create(auth),AuthorityDto.class );
 	}
 
+	@PreAuthorize("hasAuthority('Admin')")
 	@DeleteMapping("{id}")
 	public void delete(@PathVariable("id") Integer id) {
 		authorityService.delete(id);

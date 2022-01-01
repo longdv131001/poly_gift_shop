@@ -46,18 +46,22 @@ public class ProductRestController {
 		return modelMapper.map(product, ProductDto.class);
 	}
 
+	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
 	@PostMapping()
 	public ProductDto create(@RequestBody ProductDto productDto) {
 		Product product = modelMapper.map(productDto, Product.class);
 		return modelMapper.map(productService.create(product), ProductDto.class);
 	}
-	
+
+
+	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
 	@PutMapping()
 	public ProductDto update(@RequestBody ProductDto productDto) {
 		Product product = modelMapper.map(productDto, Product.class);
 		return modelMapper.map(productService.update(product), ProductDto.class);
 	}
-	
+
+	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
 	@DeleteMapping("/{id}")
 	public ProductDto disableProduct(@PathVariable("id") Integer id) {
 		Product product = productService.disableProduct(id);

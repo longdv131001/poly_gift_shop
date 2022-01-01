@@ -70,9 +70,10 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public void deleteCartByUsername(String username) {
+	public void deleteCartByUsername() {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String username = auth.getName();
 		cartRepository.deleteByUsername(username);
-		
 	}
 
 	@Override

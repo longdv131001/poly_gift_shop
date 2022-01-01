@@ -1,6 +1,8 @@
 package com.poly.entity;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -39,7 +41,25 @@ public class Order implements Serializable{
 		
 		@Column(name="Sdt")
 		private String sdt;
-		
+
+		@Column(name="fullname")
+		private String fullname;
+
+		@Column(name = "order_status") // 0:Đang chờ xác nhận , 1:Đã hủy , 2:Đang giao , 3:Giao hàng thành công
+		private Integer orderStatus;
+
+		@Column(name = "note")
+		private String note;
+
+		@Column(name = "total")
+		private Float total;
+
+		@Column(name = "created_date")
+		private LocalDateTime createdDate;
+
+		@Column(name = "updated_date")
+		private LocalDateTime updatedDate;
+
 		@JsonIgnore
 		@OneToMany(mappedBy = "order")
 		private List<OrderDetail> orderDetails;

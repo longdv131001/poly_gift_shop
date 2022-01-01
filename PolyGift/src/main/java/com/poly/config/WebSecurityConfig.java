@@ -55,15 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 
 		httpSecurity.csrf().disable() // We don't need CSRF for this example
-				.authorizeRequests().antMatchers("/rest/accounts/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
-				.antMatchers("/rest/authorities/**").hasAuthority("Admin")
-				.antMatchers(HttpMethod.POST,"/rest/categories/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
-				.antMatchers(HttpMethod.PUT,"/rest/categories/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
-				.antMatchers(HttpMethod.DELETE,"/rest/categories/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
-				.antMatchers(HttpMethod.POST,"/rest/products/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
-				.antMatchers(HttpMethod.PUT,"/rest/products/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
-				.antMatchers(HttpMethod.DELETE,"/rest/products/**").hasAnyAuthority("ROLE_Admin","ROLE_Staff")
-				.antMatchers("/rest/orders/**").permitAll()
+				.authorizeRequests().antMatchers("/rest/orders/**").permitAll()
 				.antMatchers("/rest/orderdetails/**").permitAll()
 				.antMatchers("/rest/cart/**").permitAll()
 				.antMatchers("/authenticate").permitAll().and()
