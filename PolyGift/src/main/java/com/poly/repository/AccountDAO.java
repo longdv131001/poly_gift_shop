@@ -10,9 +10,10 @@ import com.poly.entity.Account;
 
 @Repository
 public interface AccountDAO extends JpaRepository<Account, String>{
-	@Query("SELECT DISTINCT ar.account FROM Authority ar WHERE ar.role.id IN ('Admin','Staff')")
+	@Query("SELECT DISTINCT ar.account FROM Authority ar WHERE ar.role.id IN (1,2)")
 	List<Account> getAdministrators();
-	
-	Account findByUsername(String username);
+
+	@Query("SELECT a FROM Account a WHERE a.username =?1")
+	Account findAccountByUsername(String username);
 	
 }

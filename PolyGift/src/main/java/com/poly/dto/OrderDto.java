@@ -13,7 +13,7 @@ public class OrderDto {
     private Integer id;
 	private String address;
 	private String sdt;
-	private AccountDto accountDto;
+	private AccountDto account;
 	private String fullname;
 	private String note;
 	private Float total;

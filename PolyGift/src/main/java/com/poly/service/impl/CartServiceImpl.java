@@ -46,7 +46,7 @@ public class CartServiceImpl implements CartService {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			if (!(auth instanceof AnonymousAuthenticationToken)) {
 				String username = auth.getName();
-				cart.setAccount(accRepo.findByUsername(username));
+				cart.setAccount(accRepo.findAccountByUsername(username));
 				cart.setProduct(product.get());
 				return cartRepository.save(cart);
 			}
@@ -61,7 +61,7 @@ public class CartServiceImpl implements CartService {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			if (!(auth instanceof AnonymousAuthenticationToken)) {
 				String username = auth.getName();
-				cart.setAccount(accRepo.findByUsername(username));
+				cart.setAccount(accRepo.findAccountByUsername(username));
 				cart.setProduct(product.get());
 				return cartRepository.save(cart);
 			}

@@ -24,7 +24,7 @@ public class AccountServiceImpl implements AccountService{
 
 	@Override
 	public Account findByUsername(String username) {
-		return accountRepo.findByUsername(username);
+		return accountRepo.findAccountByUsername(username);
 	}
 
 	public List<Account> findAll() {
@@ -61,8 +61,8 @@ public class AccountServiceImpl implements AccountService{
 		account.setDisable(account.isDisable());
 		return accountRepo.save(account);
 	}
-		
-	
+
+
 
 	@Override
 	public List<Account> getAdministrators() {

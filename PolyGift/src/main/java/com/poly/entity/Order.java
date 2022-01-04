@@ -36,7 +36,7 @@ public class Order implements Serializable{
 		@Temporal(TemporalType.DATE)
 	
 		@ManyToOne
-		@JoinColumn(name = "Username")
+		@JoinColumn(name = "username")
 		private Account account;
 		
 		@Column(name="Sdt")
