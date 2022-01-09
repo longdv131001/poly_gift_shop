@@ -49,6 +49,8 @@ public class CartServiceImpl implements CartService {
 				String username = auth.getName();
 				cart.setAccount(accRepo.findAccountByUsername(username));
 				cart.setProduct(product.get());
+				product.get().setQuantity(product.get().getQuantity() - cart.getQuantity());
+				pRepo.save(product.get());
 				return cartRepository.save(cart);
 			}
 		}
@@ -64,6 +66,8 @@ public class CartServiceImpl implements CartService {
 				String username = auth.getName();
 				cart.setAccount(accRepo.findAccountByUsername(username));
 				cart.setProduct(product.get());
+				product.get().setQuantity(product.get().getQuantity() - cart.getQuantity());
+				pRepo.save(product.get());
 				return cartRepository.save(cart);
 			}
 		}
