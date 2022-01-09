@@ -1,6 +1,8 @@
 package com.poly.controller;
 
 import com.poly.dto.OrderDto;
+import com.poly.dto.ProductDto;
+import com.poly.entity.Product;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,11 +36,16 @@ public class OrderRestController {
 		return modelMapper.map(orderService.create(order),OrderDto.class);
 	}
 
-	@PutMapping("{id}")
-	public OrderDto updateOrder(@PathVariable("id") Integer id,@RequestBody OrderDto orderDto) {
-		Order order =  orderService.findById(id);
-		modelMapper.map(orderDto,Order.class);
+	@PutMapping()
+	public OrderDto updateOrder(@RequestBody OrderDto orderDto) {
+		Order order =  modelMapper.map(orderDto,Order.class);
 		return modelMapper.map(orderService.update(order),OrderDto.class);
+	}
+
+	@GetMapping("{id}")
+	public OrderDto getOne(@PathVariable("id") Integer id) {
+		Order order = orderService.findById(id);
+		return modelMapper.map(order, OrderDto.class);
 	}
 
 	@DeleteMapping("{id}")

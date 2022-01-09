@@ -22,18 +22,15 @@ public class OrderDetail  implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)	
 	@Column(name="Id")
 	private Integer id;
-	
-	@Column(name= "Price")
-	private Float price;
-	
+
 	@Column(name= "Quantity")
 	private Integer quantity;
 	
 	@ManyToOne
-	@JoinColumn(name = "ProductId")
+	@JoinColumn(name = "product_id")
 	private Product product;
 	
 	@ManyToOne
-	@JoinColumn(name = "OrderId")
+	@JoinColumn(name = "order_id")
 	private Order order;
 }

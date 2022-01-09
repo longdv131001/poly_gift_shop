@@ -35,10 +35,8 @@ public class OrderServiceImpl implements OrderService{
 			order.setSdt(order.getSdt());
 			order.setAccount(accountDAO.findAccountByUsername(username));
 			order.setOrderStatus(0);
-			order.setNote(order.getNote());
 			order.setTotal(order.getTotal());
 			order.setCreatedDate(LocalDateTime.now());
-			order.setUpdatedDate(LocalDateTime.now());
 			return odao.save(order);
 		}
 		return null;
@@ -52,7 +50,6 @@ public class OrderServiceImpl implements OrderService{
 			order.setAddress(order.getAddress());
 			order.setSdt(order.getSdt());
 			order.setAccount(accountDAO.findAccountByUsername(username));
-			order.setNote(order.getNote());
 			order.setTotal(order.getTotal());
 			order.setCreatedDate(order.getCreatedDate());
 			order.setUpdatedDate(LocalDateTime.now());

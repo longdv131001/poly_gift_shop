@@ -48,11 +48,26 @@ public class Order implements Serializable{
 		@Column(name = "order_status") // 0:Đang chờ xác nhận , 1:Đã hủy , 2:Đang giao , 3:Giao hàng thành công
 		private Integer orderStatus;
 
-		@Column(name = "note")
-		private String note;
+		@Column(name = "note_customer")
+		private String noteCustomer;
+
+		@Column(name = "staff")
+		private String noteStaff;
 
 		@Column(name = "total")
 		private Float total;
+
+		@Column(name = "fee")
+		private Float fee;
+
+		@Column(name = "city")
+		private String city;
+
+		@Column(name = "districts")
+		private String districts;
+
+		@Column(name = "wards")
+		private String wards;
 
 		@Column(name = "created_date")
 		private LocalDateTime createdDate;
@@ -60,6 +75,8 @@ public class Order implements Serializable{
 		@Column(name = "updated_date")
 		private LocalDateTime updatedDate;
 
+	@Column(name= "order_code")
+	private String orderCode;
 		@JsonIgnore
 		@OneToMany(mappedBy = "order")
 		private List<OrderDetail> orderDetails;

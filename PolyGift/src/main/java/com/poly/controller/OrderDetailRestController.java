@@ -32,16 +32,20 @@ public class OrderDetailRestController {
 		return modelMapper.map(orderDetail, OrderDetailDto.class);
 	}
 
+	@GetMapping("order-id/{id}")
+	public List<OrderDetailDto> getByOrderId(@PathVariable("id") Integer id) {
+		return orderDetailService.getByOrderId(id).stream().map(o -> modelMapper.map(o, OrderDetailDto.class)).collect(Collectors.toList());
+	}
+
 	@PostMapping
 	public OrderDetailDto createOrderDetail(@RequestBody OrderDetailDto orderDetailDto){
 		OrderDetail orderDetail = modelMapper.map(orderDetailDto,OrderDetail.class);
 		return modelMapper.map(orderDetailService.createOrderDetail(orderDetail),OrderDetailDto.class);
 	}
 
-	@PutMapping("{id}")
-	public OrderDetailDto updateOrderDetail(@PathVariable("id")Integer id,@RequestBody OrderDetailDto orderDetailDto){
-		OrderDetail orderDetail = orderDetailService.getById(id);
-		modelMapper.map(orderDetailDto,OrderDetail.class);
+	@PutMapping()
+	public OrderDetailDto updateOrderDetail(@RequestBody OrderDetailDto orderDetailDto){
+		OrderDetail orderDetail = modelMapper.map(orderDetailDto,OrderDetail.class);
 		return modelMapper.map(orderDetailService.updateOrderDetail(orderDetail),OrderDetailDto.class);
 	}
 

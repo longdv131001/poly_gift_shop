@@ -65,5 +65,10 @@ public class OrderDetailServiceImpl implements OrderDetailService{
 		orderDetailRepository.deleteById(id);
 		
 	}
- 
+
+	@Override
+	public List<OrderDetail> getByOrderId(Integer id) {
+		return orderDetailRepository.getByOrderId(id);
+	}
+
 }

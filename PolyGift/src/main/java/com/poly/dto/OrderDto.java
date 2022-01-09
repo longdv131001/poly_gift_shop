@@ -15,8 +15,14 @@ public class OrderDto {
 	private String sdt;
 	private AccountDto account;
 	private String fullname;
-	private String note;
+	private String noteCustomer;
+	private String noteStaff;
 	private Float total;
+	private Float fee;
+	private String city;
+	private String districts;
+	private String wards;
+	private String orderCode;
 	private LocalDateTime createdDate;
 	private LocalDateTime updatedDate;
 	private Integer orderStatus;
