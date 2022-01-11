@@ -18,7 +18,7 @@ public class CustomerDTO {
 
 	private String sdt;
 
-	private LocalDate created_date;
+	private LocalDate createdDate;
 
 	private String fullname;
 
