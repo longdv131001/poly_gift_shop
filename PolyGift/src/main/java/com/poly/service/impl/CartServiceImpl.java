@@ -58,17 +58,19 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public Cart updateCart(Cart cart) {
-		Optional<Product> product = pRepo.findById(cart.getProduct().getId());
+	public Cart updateCart(Cart cartNew) {
+		Optional<Product> product = pRepo.findById(cartNew.getProduct().getId());
 		if (product.isPresent()) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			if (!(auth instanceof AnonymousAuthenticationToken)) {
 				String username = auth.getName();
-				cart.setAccount(accRepo.findAccountByUsername(username));
-				cart.setProduct(product.get());
-				product.get().setQuantity(product.get().getQuantity() - cart.getQuantity());
+				cartNew.setAccount(accRepo.findAccountByUsername(username));
+			    Cart cOld = cartRepository.getById(cartNew.getId());
+				cOld.getProduct().setQuantity(product.get().getQuantity() + cOld.getQuantity());
+				cartRepository.save(cOld);
+				product.get().setQuantity(product.get().getQuantity() - cartNew.getQuantity());
 				pRepo.save(product.get());
-				return cartRepository.save(cart);
+				return cartRepository.save(cartNew);
 			}
 		}
 		return null;
@@ -88,7 +90,11 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public void deleteCartById(Integer id) {
-		 cartRepository.deleteById(id);
+		Cart cart = cartRepository.getById(id);
+		Product product = pRepo.getById(cart.getProduct().getId());
+		product.setQuantity(product.getQuantity() + cart.getQuantity());
+		pRepo.save(product);
+		cartRepository.deleteById(id);
 	}
 
 	@Override
