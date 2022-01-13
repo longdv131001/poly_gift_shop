@@ -8,23 +8,25 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "Customer")
+@Table(name = "customer")
 
-public class Customer {
+public class Customer implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="id")
 	private Integer id;
 	
-	@Column(name="sdt")
+	@Column(name="sdt_customer")
 	private String sdt;
 	
 	@Column(name="created_date")
-	private LocalDate created_date;
-	
+	private LocalDate createdDate;
+
+
 	@Column(name="fullname")
 	private String fullname;
 
-	@Column(name="group")
+	@Column(name="group_customer")
 	private String group;
 }

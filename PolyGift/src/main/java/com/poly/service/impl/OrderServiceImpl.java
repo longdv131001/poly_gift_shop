@@ -73,5 +73,10 @@ public class OrderServiceImpl implements OrderService{
 		odao.deleteById(id);
 	}
 
+	@Override
+	public List<Order> findBySdt(String sdt) {
+		return odao.findBySdt(sdt);
+	}
+
 
 }

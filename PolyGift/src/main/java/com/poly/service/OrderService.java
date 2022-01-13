@@ -21,4 +21,5 @@ public interface OrderService{
 
 	void delete(Integer id);
 
+	List<Order>  findBySdt(String sdt);
 }

@@ -48,6 +48,11 @@ public class OrderRestController {
 		return modelMapper.map(order, OrderDto.class);
 	}
 
+	@GetMapping("sdt/{sdt}")
+	public List<OrderDto>  findBySdt(@PathVariable("sdt") String sdt) {
+		return orderService.findBySdt(sdt).stream().map(o -> modelMapper.map(o,OrderDto.class)).collect(Collectors.toList());
+	}
+
 	@DeleteMapping("{id}")
 	public void deleteOrder(@PathVariable("id") Integer id){
 		orderService.delete(id);
