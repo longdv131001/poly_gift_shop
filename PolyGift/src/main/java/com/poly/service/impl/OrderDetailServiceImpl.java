@@ -53,6 +53,10 @@ public class OrderDetailServiceImpl implements OrderDetailService{
 		Optional<Order> order = orderRepository.findById(orderDetail.getOrder().getId());
 		Optional<Product> product = productRepository.findById(orderDetail.getProduct().getId());
 		if(order.isPresent() && product.isPresent()) {
+			if(order.get().getOrderStatus() == 4 ){
+				product.get().setQuantity(product.get().getQuantity() + orderDetail.getQuantity());
+				productRepository.save(product.get());
+			}
 			orderDetail.setOrder(order.get());
 			orderDetail.setProduct(product.get());
 			return orderDetailRepository.save(orderDetail);
