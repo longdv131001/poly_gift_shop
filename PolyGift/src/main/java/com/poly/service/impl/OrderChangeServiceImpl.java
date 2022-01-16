@@ -58,7 +58,6 @@ public class OrderChangeServiceImpl implements OrderChangeService {
             if(order.isPresent()){
                 String username = auth.getName();
                 orderChange.setAccount(accountDAO.findAccountByUsername(username));
-                orderChange.setCreatedDate(LocalDateTime.now());
                 orderChange.setOrder(order.get());
                 return orderChangeRepository.save(orderChange);
             }
