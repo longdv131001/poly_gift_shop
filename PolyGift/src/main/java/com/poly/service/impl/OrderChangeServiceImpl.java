@@ -45,7 +45,6 @@ public class OrderChangeServiceImpl implements OrderChangeService {
                 orderChange.setOrder(order.get());
                 return orderChangeRepository.save(orderChange);
             }
-
         }
         return null;
     }
@@ -69,5 +68,10 @@ public class OrderChangeServiceImpl implements OrderChangeService {
     @Override
     public void deleteOrderChange(Integer id) {
         orderChangeRepository.deleteById(id);
+    }
+
+    @Override
+    public List<OrderChange> getOrderChangeByOrderId(Integer id) {
+        return orderChangeRepository.getOrderChangeByOrderId(id);
     }
 }

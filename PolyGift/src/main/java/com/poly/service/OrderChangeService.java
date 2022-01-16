@@ -2,6 +2,7 @@ package com.poly.service;
 
 import com.poly.entity.OrderChange;
 
+import java.util.Arrays;
 import java.util.List;
 
 public interface OrderChangeService {
@@ -12,4 +13,6 @@ public interface OrderChangeService {
     OrderChange updateOrderChange(OrderChange orderChange);
 
     void deleteOrderChange(Integer id);
+
+    List<OrderChange> getOrderChangeByOrderId(Integer id);
 }

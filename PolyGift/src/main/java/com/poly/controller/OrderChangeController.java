@@ -37,6 +37,10 @@ public class OrderChangeController {
         return  modelMapper.map(orderChangeService.createOrderChange(orderChange),OrderChangeDTO.class);
     }
 
+    @GetMapping("{id}")
+    public List<OrderChangeDTO> getOrderChangeByOrderId(@PathVariable("id") Integer id){
+        return orderChangeService.getOrderChangeByOrderId(id).stream().map(o -> modelMapper.map(o,OrderChangeDTO.class)).collect(Collectors.toList());
+    }
     @DeleteMapping("{id}")
     public void deleteOrderChange(@PathVariable("id") Integer id){
         orderChangeService.deleteOrderChange(id);

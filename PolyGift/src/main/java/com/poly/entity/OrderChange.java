@@ -11,7 +11,7 @@ import java.util.List;
 @SuppressWarnings("serial")
 @Data
 @Entity 
-@Table(name = "OrderChange")
+@Table(name = "Orderchange")
 public class OrderChange implements Serializable{
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
