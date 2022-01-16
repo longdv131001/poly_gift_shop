@@ -51,9 +51,6 @@ public class Order implements Serializable{
 		@Column(name = "note_customer")
 		private String noteCustomer;
 
-		@Column(name = "staff")
-		private String noteStaff;
-
 		@Column(name = "total")
 		private Float total;
 
@@ -75,9 +72,12 @@ public class Order implements Serializable{
 		@Column(name = "updated_date")
 		private LocalDateTime updatedDate;
 
-	@Column(name= "order_code")
-	private String orderCode;
+		@Column(name= "order_code")
+		private String orderCode;
 		@JsonIgnore
 		@OneToMany(mappedBy = "order")
 		private List<OrderDetail> orderDetails;
+
+		@OneToMany(mappedBy = "order")
+		private List<OrderChange> orderChanges;
 }

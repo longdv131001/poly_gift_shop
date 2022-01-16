@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.poly.entity.Cart;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+@Repository
 public interface CartRepository extends JpaRepository<Cart, Integer>{
 	@Query(value = "select c from Cart c where c.account.username =  :username")
 	List<Cart> findByUsername(@Param("username") String username);

@@ -16,7 +16,6 @@ public class OrderDto {
 	private AccountDto account;
 	private String fullname;
 	private String noteCustomer;
-	private String noteStaff;
 	private Float total;
 	private Float fee;
 	private String city;
