@@ -1,22 +1,19 @@
 package com.poly.entity;
 
-import java.io.Serializable;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data
-@Table(name="Cart")
+@Table(name = "cart")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Cart implements Serializable {
 
 	/**
@@ -26,7 +23,7 @@ public class Cart implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="Id")
+	@Column(name = "id")
 	private Integer id;
 	
 	@Column(name="quantity")
@@ -35,8 +32,8 @@ public class Cart implements Serializable {
 	@OneToOne
 	@JoinColumn(name = "username")
 	private Account account;
-	
+
 	@ManyToOne
-	@JoinColumn(name="productId")
+	@JoinColumn(name = "product_id")
 	private Product product;
 }

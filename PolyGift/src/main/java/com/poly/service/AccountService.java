@@ -1,21 +1,20 @@
 package com.poly.service;
 
+import com.poly.request.AccountRequest;
+import com.poly.response.AccountResponse;
+
 import java.util.List;
 
-import com.poly.entity.Account;
-
 public interface AccountService {
-	Account findByUsername(String username);
-	
-	Account findById(String username);
+    AccountResponse findByUsername(String username);
 
-	List<Account> findAll();
+    AccountResponse findById(String username);
 
-	Account disableUser(String username);
+    List<AccountResponse> findAll();
 
-	Account create(Account account);
+    AccountResponse disableUser(String username);
 
-	Account update(Account account);
+    AccountResponse create(AccountRequest request);
 
-	List<Account> getAdministrators();
+    AccountResponse update(String username, AccountRequest request);
 }

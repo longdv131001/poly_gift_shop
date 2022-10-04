@@ -1,78 +1,81 @@
 package com.poly.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.poly.config.exception.AppException;
+import com.poly.entity.Account;
+import com.poly.repository.AccountRepository;
+import com.poly.request.AccountRequest;
+import com.poly.response.AccountResponse;
+import com.poly.service.AccountService;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.poly.entity.Account;
-import com.poly.repository.AccountDAO;
-import com.poly.service.AccountService;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class AccountServiceImpl implements AccountService{
-	@Autowired
-	AccountDAO accountRepo;
-
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	public static List<Account> listAccount = new ArrayList<Account>();
-
-	@Override
-	public Account findByUsername(String username) {
-		return accountRepo.findAccountByUsername(username);
-	}
-
-	public List<Account> findAll() {
-		return accountRepo.findAll();
-	}
-
-	@Override
-	public Account disableUser(String username) {
-		Optional<Account> account = accountRepo.findById(username);
-		if (account.isPresent()){
-			account.get().setDisable(true);
-			return  accountRepo.save(account.get());
-		}
-		return null;
-	}
+@RequiredArgsConstructor
+public class AccountServiceImpl implements AccountService {
+    private final AccountRepository accountRepository;
+    private final ModelMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
 
-	@Override
-	public Account create(Account account) {
-		account.setUsername(account.getUsername());
-		account.setPassword(passwordEncoder.encode(account.getPassword()));
-		account.setFullname(account.getFullname());
-		account.setEmail(account.getEmail());
-		account.setDisable(false);
-		return accountRepo.save(account);
-	}
+    @Override
+    public AccountResponse findByUsername(String username) {
+        Account account = accountRepository.findById(username)
+                .orElseThrow(() -> new AppException("Account not found", 404));
+        return mapper.map(account, AccountResponse.class);
+    }
 
-	@Override
-	public Account update(Account account) {
-		account.setUsername(account.getUsername());
-		account.setPassword(passwordEncoder.encode(account.getPassword()));
-		account.setFullname(account.getFullname());
-		account.setEmail(account.getEmail());
-		account.setDisable(account.isDisable());
-		return accountRepo.save(account);
-	}
+    public List<AccountResponse> findAll() {
+        return accountRepository.findAll()
+                .stream()
+                .map(account -> mapper.map(account, AccountResponse.class))
+                .collect(Collectors.toList());
+    }
 
+    @Override
+    public AccountResponse disableUser(String username) {
+        Account account = accountRepository.findById(username)
+                .orElseThrow(() -> new AppException("Account not found", 404));
+        account.setDisable(true);
+        accountRepository.save(account);
+        return mapper.map(account, AccountResponse.class);
+    }
 
+    @Override
+    public AccountResponse create(AccountRequest request) {
+        Account account = accountRepository.save(Account.builder()
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .fullName(request.getFullName())
+                .email(request.getEmail())
+                .isDisable(false)
+                .build());
+        return mapper.map(account, AccountResponse.class);
+    }
 
-	@Override
-	public List<Account> getAdministrators() {
-		return accountRepo.getAdministrators();
-	}
+    @Override
+    public AccountResponse update(String username, AccountRequest request) {
+        Account account = accountRepository.findById(username)
+                .orElseThrow(() -> new AppException("Account not found", 404));
+        account.setUsername(request.getUsername());
+        account.setPassword(passwordEncoder.encode(request.getPassword()));
+        account.setFullName(request.getFullName());
+        account.setEmail(request.getEmail());
+        account.setDisable(request.isDisable());
+        accountRepository.save(account);
+        return mapper.map(account, AccountResponse.class);
+    }
 
-	@Override
-	public Account findById(String username) {
-		return accountRepo.findById(username).get();
-	}
+    @Override
+    public AccountResponse findById(String username) {
+        Account account = accountRepository.findById(username)
+                .orElseThrow(() -> new AppException("Account not found", 404));
+        return mapper.map(account, AccountResponse.class);
+    }
 
 
 }

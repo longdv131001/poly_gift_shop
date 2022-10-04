@@ -1,83 +1,74 @@
 package com.poly.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.Data;
-
 @SuppressWarnings("serial")
 @Data
-@Entity 
-@Table(name = "Orders")
-public class Order implements Serializable{
-		@Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		@Column(name="Id")
-		private Integer id;
-		
-		@Column(name="Address")
-		private String address;
-		@Temporal(TemporalType.DATE)
-	
-		@ManyToOne
-		@JoinColumn(name = "username")
-		private Account account;
-		
-		@Column(name="Sdt")
-		private String sdt;
+@Entity
+@Table(name = "orders")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Order implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
-		@Column(name="fullname")
-		private String fullname;
+    @Column(name = "address")
+    private String address;
 
-		@Column(name = "order_status") // 0:Đang chờ xác nhận , 1:Đã hủy , 2:Đang giao , 3:Giao hàng thành công
-		private Integer orderStatus;
+    @ManyToOne
+    @JoinColumn(name = "username")
+    private Account account;
 
-		@Column(name = "note_customer")
-		private String noteCustomer;
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
-		@Column(name = "total")
-		private Float total;
+    @Column(name = "full_name")
+    private String fullName;
 
-		@Column(name = "fee")
-		private Float fee;
+    @Column(name = "order_status") // 0:Đang chờ xác nhận , 1:Đã hủy , 2:Đang giao , 3:Giao hàng thành công
+    private Byte orderStatus;
 
-		@Column(name = "city")
-		private String city;
+    @Column(name = "note_customer")
+    private String noteCustomer;
 
-		@Column(name = "districts")
-		private String districts;
+    @Column(name = "total")
+    private Long total;
 
-		@Column(name = "wards")
-		private String wards;
+    @Column(name = "fee")
+    private Long fee;
 
-		@Column(name = "created_date")
-		private LocalDateTime createdDate;
+    @Column(name = "city")
+    private String city;
 
-		@Column(name = "updated_date")
-		private LocalDateTime updatedDate;
+    @Column(name = "districts")
+    private String districts;
 
-		@Column(name= "order_code")
-		private String orderCode;
-		@JsonIgnore
-		@OneToMany(mappedBy = "order")
-		private List<OrderDetail> orderDetails;
+    @Column(name = "wards")
+    private String wards;
 
-		@OneToMany(mappedBy = "order")
-		private List<OrderChange> orderChanges;
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
+
+    @Column(name = "updated_date")
+    private LocalDateTime updatedDate;
+
+    @Column(name = "order_code")
+    private String orderCode;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderDetail> orderDetails;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderChange> orderChanges;
 }

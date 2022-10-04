@@ -1,24 +1,23 @@
 package com.poly.service;
 
-import java.util.List;
+import com.poly.request.ProductRequest;
+import com.poly.response.ProductResponse;
 
-import com.poly.entity.Product;
+import java.util.List;
 
 public interface ProductService {
 
-	List<Product> findAll();
+	List<ProductResponse> findAll();
 
-	List<Product> findAllProductAvailable();
+	List<ProductResponse> findAllProductAvailable();
 
-	Product findById(Integer id);
+	ProductResponse findById(Integer id);
 
-	List<Product> findByCategoryID(String string);
+	ProductResponse create(ProductRequest request);
 
-	Product create(Product product);
+	ProductResponse update(int id, ProductRequest request);
 
-	Product update(Product product);
-
-	Product disableProduct(Integer id);
+	ProductResponse disableProduct(Integer id);
 
 
 

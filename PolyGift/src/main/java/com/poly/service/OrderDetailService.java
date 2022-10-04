@@ -1,16 +1,20 @@
 package com.poly.service;
 
-import java.util.Arrays;
+import com.poly.request.OrderDetailRequest;
+import com.poly.response.OrderDetailResponse;
+
 import java.util.List;
 
-import com.poly.entity.OrderDetail;
-
 public interface OrderDetailService {
-      public List<OrderDetail> getAllOrderDetails();
-      public OrderDetail getById(Integer id);
-      public OrderDetail createOrderDetail(OrderDetail orderDetail);
-      public OrderDetail updateOrderDetail(OrderDetail orderDetail);
-      public void delete(Integer id);
+    List<OrderDetailResponse> getAllOrderDetails();
 
-      List<OrderDetail>  getByOrderId(Integer id);
+    OrderDetailResponse getById(Integer id);
+
+    OrderDetailResponse createOrderDetail(OrderDetailRequest request);
+
+    OrderDetailResponse updateOrderDetail(int id, OrderDetailRequest request);
+
+    void delete(Integer id);
+
+    List<OrderDetailResponse> getByOrderId(Integer id);
 }

@@ -1,78 +1,86 @@
 package com.poly.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.poly.config.exception.AppException;
 import com.poly.entity.Order;
 import com.poly.entity.OrderDetail;
 import com.poly.entity.Product;
-import com.poly.repository.OrderDAO;
-import com.poly.repository.OrderDetailDAO;
-import com.poly.repository.ProductDAO;
+import com.poly.repository.OrderDetailRepository;
+import com.poly.repository.OrderRepository;
+import com.poly.repository.ProductRepository;
+import com.poly.request.OrderDetailRequest;
+import com.poly.response.OrderDetailResponse;
 import com.poly.service.OrderDetailService;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class OrderDetailServiceImpl implements OrderDetailService{
-	
-	@Autowired
-	private OrderDetailDAO orderDetailRepository;
-	
-	@Autowired
-	private ProductDAO productRepository;
-	
-	@Autowired
-	private OrderDAO orderRepository;
-	
-	@Override
-	public List<OrderDetail> getAllOrderDetails() {
-		return orderDetailRepository.findAll();
-	}
+@RequiredArgsConstructor
+public class OrderDetailServiceImpl implements OrderDetailService {
 
-	@Override
-	public OrderDetail getById(Integer id) {
-		return orderDetailRepository.findById(id).get();
-	}
+    private final OrderDetailRepository orderDetailRepository;
 
-	@Override
-	public OrderDetail createOrderDetail(OrderDetail orderDetail) {
-		Optional<Order> order = orderRepository.findById(orderDetail.getOrder().getId());
-		Optional<Product> product = productRepository.findById(orderDetail.getProduct().getId());
-		if(order.isPresent() && product.isPresent()) {
-			orderDetail.setOrder(order.get());
-			orderDetail.setProduct(product.get());
-			return orderDetailRepository.save(orderDetail);
-		}
-		return null;
-	}
+    private final ProductRepository productRepository;
 
-	@Override
-	public OrderDetail updateOrderDetail(OrderDetail orderDetail) {
-		Optional<Order> order = orderRepository.findById(orderDetail.getOrder().getId());
-		Optional<Product> product = productRepository.findById(orderDetail.getProduct().getId());
-		if(order.isPresent() && product.isPresent()) {
-			if(order.get().getOrderStatus() == 4 ){
-				product.get().setQuantity(product.get().getQuantity() + orderDetail.getQuantity());
-				productRepository.save(product.get());
-			}
-			orderDetail.setOrder(order.get());
-			orderDetail.setProduct(product.get());
-			return orderDetailRepository.save(orderDetail);
-		}
-		return null;
-	}
+    private final OrderRepository orderRepository;
 
-	@Override
-	public void delete(Integer id) {
-		orderDetailRepository.deleteById(id);
-		
-	}
+    private final ModelMapper mapper;
 
-	@Override
-	public List<OrderDetail> getByOrderId(Integer id) {
-		return orderDetailRepository.getByOrderId(id);
-	}
+    @Override
+    public List<OrderDetailResponse> getAllOrderDetails() {
+        return orderDetailRepository.findAll()
+                .stream()
+                .map(orderDetail -> mapper.map(orderDetail, OrderDetailResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderDetailResponse getById(Integer id) {
+        OrderDetail orderDetail = orderDetailRepository.findById(id)
+                .orElseThrow(() -> new AppException("OrderDetail not found"));
+        return mapper.map(orderDetail, OrderDetailResponse.class);
+    }
+
+    @Override
+    public OrderDetailResponse createOrderDetail(OrderDetailRequest request) {
+        Order order = orderRepository.findById(request.getOrderId()).orElseThrow(() -> new AppException("Order not found", 404));
+        Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new AppException("Product not found", 404));
+        OrderDetail orderDetail = orderDetailRepository.save(OrderDetail.builder()
+                .order(order)
+                .product(product)
+                .quantity(request.getQuantity())
+                .build());
+        return mapper.map(orderDetail, OrderDetailResponse.class);
+    }
+
+    @Override
+    public OrderDetailResponse updateOrderDetail(int id, OrderDetailRequest request) {
+        OrderDetail orderDetail = orderDetailRepository.findById(id).orElseThrow(() -> new AppException("OrderDetail not found", 404));
+        Order order = orderRepository.findById(request.getOrderId()).orElseThrow(() -> new AppException("Order not found", 404));
+        Product product = productRepository.findById(request.getProductId()).orElseThrow(() -> new AppException("Product not found", 404));
+        if (order.getOrderStatus() == 4) {
+            product.setQuantity(product.getQuantity() + request.getQuantity());
+            productRepository.save(product);
+        }
+        orderDetail.setOrder(order);
+        orderDetail.setProduct(product);
+        orderDetailRepository.save(orderDetail);
+        return mapper.map(orderDetail, OrderDetailResponse.class);
+    }
+
+    @Override
+    public void delete(Integer id) {
+        orderDetailRepository.deleteById(id);
+
+    }
+
+    @Override
+    public List<OrderDetailResponse> getByOrderId(Integer id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new AppException("Order not found", 404));
+        return orderDetailRepository.findByOrder(order).stream().map(orderDetail -> mapper.map(orderDetail, OrderDetailResponse.class)).collect(Collectors.toList());
+    }
 
 }

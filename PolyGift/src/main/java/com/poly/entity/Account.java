@@ -1,51 +1,47 @@
 package com.poly.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.Data;
 
 @SuppressWarnings("serial")
 @Data
 @Entity
-@Table(name = "Accounts")
-
+@Table(name = "accounts")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account implements Serializable {
-	
+
 	@Id
-	@Column(name="Username")
+	@Column(name = "username")
 	private String username;
-	
-	@Column(name="Password")
+
+	@Column(name = "password")
 	private String password;
-	
-	@Column(name="Fullname")
-	private String fullname;
-	
-	@Column(name="Email")
+
+	@Column(name = "full_name")
+	private String fullName;
+
+	@Column(name = "email")
 	private String email;
 
-	@Column(name = "disable", nullable = false)
+	@Column(name = "disable")
+	@ColumnDefault("1")
 	private boolean isDisable;
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "account")
 	List<Order> orders;
-	
-	@JsonIgnore
+
 	@OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
 	List<Authority> authorities;
-	
+
 	@OneToOne(mappedBy = "account")
 	private Cart cart;
 }

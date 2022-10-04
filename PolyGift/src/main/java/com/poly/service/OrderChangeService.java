@@ -1,18 +1,18 @@
 package com.poly.service;
 
-import com.poly.entity.OrderChange;
+import com.poly.request.OrderChangeRequest;
+import com.poly.response.OrderChangeResponse;
 
-import java.util.Arrays;
 import java.util.List;
 
 public interface OrderChangeService {
-    List<OrderChange> getAllOrderChange();
+    List<OrderChangeResponse> getAllOrderChange();
 
-    OrderChange createOrderChange(OrderChange orderChange);
+    OrderChangeResponse createOrderChange(OrderChangeRequest request);
 
-    OrderChange updateOrderChange(OrderChange orderChange);
+    OrderChangeResponse updateOrderChange(int id, OrderChangeRequest request);
 
     void deleteOrderChange(Integer id);
 
-    List<OrderChange> getOrderChangeByOrderId(Integer id);
+    List<OrderChangeResponse> getOrderChangeByOrderId(Integer id);
 }

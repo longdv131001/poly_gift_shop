@@ -1,17 +1,22 @@
 package com.poly.service;
 
+import com.poly.request.CartRequest;
+import com.poly.response.CartResponse;
+
 import java.util.List;
 
-import com.poly.entity.Cart;
-
 public interface CartService {
-	Cart createCart(Cart cart);
-	Cart updateCart(Cart cart);
-	List<Cart> getCartByUsername();
+	CartResponse createCart(CartRequest request);
+
+	CartResponse updateCart(int id, CartRequest request);
+
+	List<CartResponse> getCartByUsername();
+
 	void deleteCartByUsername();
-	Cart findById(Integer id);
+
+	CartResponse findById(Integer id);
 
 	void deleteCartById(Integer id);
 
-	Cart findByProductId(Integer idProduct);
+	CartResponse findByProductId(Integer idProduct);
 }

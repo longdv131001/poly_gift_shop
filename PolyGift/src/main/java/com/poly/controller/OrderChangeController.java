@@ -1,48 +1,43 @@
 package com.poly.controller;
 
-import com.poly.dto.OrderChangeDTO;
-import com.poly.entity.OrderChange;
+import com.poly.request.OrderChangeRequest;
+import com.poly.response.OrderChangeResponse;
 import com.poly.service.OrderChangeService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/rest/orderchange")
+@RequestMapping("/rest/order-change")
+@RequiredArgsConstructor
 public class OrderChangeController {
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private OrderChangeService orderChangeService;
+    private final OrderChangeService orderChangeService;
 
     @GetMapping
-    public List<OrderChangeDTO> getAllOderChange(){
-        return orderChangeService.getAllOrderChange().stream().map(o -> modelMapper.map(o,OrderChangeDTO.class)).collect(Collectors.toList());
+    public ResponseEntity<List<OrderChangeResponse>> getAllOderChange() {
+        return ResponseEntity.ok(orderChangeService.getAllOrderChange());
     }
 
     @PostMapping
-    public OrderChangeDTO createOrderChange(@RequestBody OrderChangeDTO orderChangeDTO){
-        OrderChange orderChange = modelMapper.map(orderChangeDTO,OrderChange.class);
-        return  modelMapper.map(orderChangeService.createOrderChange(orderChange),OrderChangeDTO.class);
+    public ResponseEntity<OrderChangeResponse> createOrderChange(@RequestBody OrderChangeRequest request) {
+        return ResponseEntity.ok(orderChangeService.createOrderChange(request));
     }
 
-    @PutMapping
-    public OrderChangeDTO updateOrderChange(@RequestBody OrderChangeDTO orderChangeDTO){
-        OrderChange orderChange = modelMapper.map(orderChangeDTO,OrderChange.class);
-        return  modelMapper.map(orderChangeService.createOrderChange(orderChange),OrderChangeDTO.class);
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderChangeResponse> updateOrderChange(@PathVariable("id") Integer id, @RequestBody OrderChangeRequest request) {
+        return ResponseEntity.ok(orderChangeService.updateOrderChange(id, request));
     }
 
-    @GetMapping("{id}")
-    public List<OrderChangeDTO> getOrderChangeByOrderId(@PathVariable("id") Integer id){
-        return orderChangeService.getOrderChangeByOrderId(id).stream().map(o -> modelMapper.map(o,OrderChangeDTO.class)).collect(Collectors.toList());
+    @GetMapping("/{id}")
+    public ResponseEntity<List<OrderChangeResponse>> getOrderChangeByOrderId(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(orderChangeService.getOrderChangeByOrderId(id));
     }
-    @DeleteMapping("{id}")
-    public void deleteOrderChange(@PathVariable("id") Integer id){
+
+    @DeleteMapping("/{id}")
+    public void deleteOrderChange(@PathVariable("id") Integer id) {
         orderChangeService.deleteOrderChange(id);
     }
 }

@@ -1,50 +1,49 @@
 package com.poly.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.Data;
-
 @SuppressWarnings("serial")
 @Data
-@Entity 
-@Table(name = "Products")
-public class Product  implements Serializable{
-	@Id	
+@Entity
+@Table(name = "products")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class Product implements Serializable {
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer Id;
-	private String Name;
-	private String Image;
-	private Double Price;
-	private Integer Quantity;
-	private String Description;
-	@Temporal(TemporalType.DATE)
-	@Column(name = "createdate")
-	private Date CreateDate;
-	private Integer Available;
+	private Integer id;
+
+	private String name;
+
+	private String image;
+
+	private Double price;
+
+	private Integer quantity;
+
+	private String description;
+
+	@Column(name = "created_date")
+	private Date createdDate;
+
+	private Byte available;
+
 	@ManyToOne
-	@JoinColumn(name = "categoryid")
+	@JoinColumn(name = "category_id")
 	private Category category;
-	@JsonIgnore
+
 	@OneToMany(mappedBy = "product")
-	private List<OrderDetail> orderDetails;	
-	
-	@JsonIgnore
+	private List<OrderDetail> orderDetails;
+
 	@OneToMany(mappedBy = "product")
 	private List<Cart> cart;
 }

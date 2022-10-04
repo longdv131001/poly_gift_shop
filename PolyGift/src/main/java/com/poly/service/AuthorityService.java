@@ -1,20 +1,20 @@
 package com.poly.service;
 
-import java.util.List;
+import com.poly.request.AuthorityRequest;
+import com.poly.response.AuthorityResponse;
 
-import com.poly.entity.Authority;
+import java.util.List;
 
 public interface AuthorityService {
 
- public	List<Authority> findAll();
- 
- public Authority create(Authority auth);
- 
+ List<AuthorityResponse> findAll();
 
- public	List<Authority> findAuthoritiesOfAdminstrators();
+ AuthorityResponse create(AuthorityRequest request);
 
- public void delete(Integer id);
 
+ List<AuthorityResponse> findAuthoritiesOfAdminstrators();
+
+ void delete(Integer id);
 
 
 }

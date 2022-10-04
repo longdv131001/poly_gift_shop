@@ -1,70 +1,56 @@
 package com.poly.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.poly.dto.ProductDto;
-import com.poly.entity.Product;
+import com.poly.request.ProductRequest;
+import com.poly.response.ProductResponse;
 import com.poly.service.ProductService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/rest/products")
+@RequiredArgsConstructor
 public class ProductRestController {
-	@Autowired
-	ProductService productService;
-	
-	@Autowired
-	ModelMapper modelMapper;
 
-	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
-	@GetMapping("/list")
-	public List<ProductDto> getAll() {
-		return productService.findAll().stream().map(p -> modelMapper.map(p, ProductDto.class)).collect(Collectors.toList());
-	}
-	@GetMapping("/list/user")
-	public List<ProductDto> getAllProductAvailable() {
-		return productService.findAllProductAvailable().stream().map(p -> modelMapper.map(p, ProductDto.class)).collect(Collectors.toList());
-	}
+    private final ProductService productService;
 
-	@GetMapping("{id}")
-	public ProductDto getOne(@PathVariable("id") Integer id) {
-		Product product = productService.findById(id);
-		return modelMapper.map(product, ProductDto.class);
-	}
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
+    @GetMapping("/list")
+    public ResponseEntity<List<ProductResponse>> getAll() {
+        return ResponseEntity.ok(productService.findAll());
+    }
 
-	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
-	@PostMapping()
-	public ProductDto create(@RequestBody ProductDto productDto) {
-		Product product = modelMapper.map(productDto, Product.class);
-		return modelMapper.map(productService.create(product), ProductDto.class);
-	}
+    @GetMapping("/list/user")
+    public ResponseEntity<List<ProductResponse>> getAllProductAvailable() {
+        return ResponseEntity.ok(productService.findAllProductAvailable());
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<ProductResponse> getOne(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(productService.findById(id));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
+    @PostMapping()
+    public ResponseEntity<ProductResponse> create(@RequestBody ProductRequest request) {
+        return ResponseEntity.ok(productService.create(request));
+    }
 
 
-	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
-	@PutMapping()
-	public ProductDto update(@RequestBody ProductDto productDto) {
-		Product product = modelMapper.map(productDto, Product.class);
-		return modelMapper.map(productService.update(product), ProductDto.class);
-	}
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponse> update(@PathVariable int id, @RequestBody ProductRequest request) {
+        return ResponseEntity.ok(productService.update(id, request));
+    }
 
-	@PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
-	@DeleteMapping("/{id}")
-	public ProductDto disableProduct(@PathVariable("id") Integer id) {
-		Product product = productService.disableProduct(id);
-		return modelMapper.map(product,ProductDto.class);
-	}
+    @PreAuthorize("hasAnyAuthority('ROLE_Admin','ROLE_Staff')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ProductResponse> disableProduct(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(productService.disableProduct(id));
+
+    }
 }

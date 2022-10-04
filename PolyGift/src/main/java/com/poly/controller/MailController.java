@@ -1,7 +1,7 @@
 package com.poly.controller;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
@@ -11,15 +11,16 @@ import java.util.Random;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/sendmail")
+@RequestMapping("/send-mail")
+@RequiredArgsConstructor
 public class MailController {
-    @Autowired
-    JavaMailSender javamail;
+
+    private final JavaMailSender javamail;
 
     @GetMapping("/{mail}")
     public HashMap<String, Object> send(@PathVariable("mail") String mail) {
-        Random rd=new Random();
-        String code = "PL" + rd.nextInt(20001)+80000;
+        Random rd = new Random();
+        String code = "PL" + rd.nextInt(20001) + 80000;
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo(mail);
         msg.setSubject("Mã kích hoạt");

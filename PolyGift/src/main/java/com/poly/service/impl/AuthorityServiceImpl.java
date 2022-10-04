@@ -1,44 +1,68 @@
 package com.poly.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
+import com.poly.config.exception.AppException;
 import com.poly.entity.Account;
 import com.poly.entity.Authority;
-import com.poly.repository.AccountDAO;
-import com.poly.repository.AuthorityDAO;
+import com.poly.entity.Role;
+import com.poly.repository.AccountRepository;
+import com.poly.repository.AuthorityRepository;
+import com.poly.repository.RoleRepository;
+import com.poly.request.AuthorityRequest;
+import com.poly.response.AuthorityResponse;
 import com.poly.service.AuthorityService;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
-public class AuthorityServiceImpl  implements AuthorityService{
-	@Autowired
-	AuthorityDAO dao;
-	@Autowired
-	AccountDAO acdao;
-	
-	
-	@Override
-	public List<Authority> findAll() {
-		return dao.findAll();
-	}
+@RequiredArgsConstructor
+public class AuthorityServiceImpl implements AuthorityService {
 
-	@Override
-	public Authority create(Authority auth) {
-		return dao.save(auth);
-	}
+    private final AuthorityRepository authorityRepository;
+    private final AccountRepository accountRepository;
+    private final RoleRepository roleRepository;
+    private final ModelMapper mapper;
 
-	@Override
-	public List<Authority> findAuthoritiesOfAdminstrators() {
-		List<Account> accounts=acdao.getAdministrators();
-		return dao.authoritiesOf(accounts);
-	}
+    @Override
+    public List<AuthorityResponse> findAll() {
+        return authorityRepository.findAll()
+                .stream()
+                .map(authority -> mapper.map(authority, AuthorityResponse.class))
+                .collect(Collectors.toList());
+    }
 
-	@Override
-	public void delete(Integer id) {
-		 dao.deleteById(id);
-		
-	}
+    @Override
+    public AuthorityResponse create(AuthorityRequest request) {
+        Account account = accountRepository.findById(request.getUsername())
+                .orElseThrow(() -> new AppException("Account not found", 404));
+        Role role = roleRepository.findById(request.getRoleId())
+                .orElseThrow(() -> new AppException("Role not found", 404));
+
+        Authority auth = authorityRepository.save(Authority.builder()
+                .account(account)
+                .role(role)
+                .build());
+        return mapper.map(auth, AuthorityResponse.class);
+    }
+
+    @Override
+    public List<AuthorityResponse> findAuthoritiesOfAdminstrators() {
+        List<Account> accounts = accountRepository.getAdministrators();
+        return authorityRepository.authoritiesOf(accounts)
+                .stream()
+                .map(authority -> mapper.map(authority, AuthorityResponse.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void delete(Integer id) {
+        Authority authority = authorityRepository.findById(id)
+                .orElseThrow(() -> new AppException("Authority not found", 404));
+        authorityRepository.delete(authority);
+
+    }
 
 }

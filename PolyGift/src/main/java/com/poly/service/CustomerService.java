@@ -1,13 +1,18 @@
 package com.poly.service;
 
-import com.poly.entity.Customer;
+import com.poly.request.CustomerRequest;
+import com.poly.response.CustomerResponse;
 
 import java.util.List;
 
 public interface CustomerService {
-    List<Customer> getAllCustomer();
-    Customer getByIdCustomer(Integer id);
-    Customer createCustomer(Customer customer);
-    Customer updateCustomer(Customer customer);
+    List<CustomerResponse> getAllCustomer();
+
+    CustomerResponse getByIdCustomer(Integer id);
+
+    CustomerResponse createCustomer(CustomerRequest request);
+
+    CustomerResponse updateCustomer(Integer id, CustomerRequest request);
+
     void deleteCustomer(Integer id);
 }

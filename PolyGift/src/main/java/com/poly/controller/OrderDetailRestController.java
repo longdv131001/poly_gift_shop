@@ -1,57 +1,50 @@
 package com.poly.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.poly.request.OrderDetailRequest;
+import com.poly.response.OrderDetailResponse;
+import com.poly.service.OrderDetailService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.poly.dto.OrderDetailDto;
-import com.poly.entity.OrderDetail;
-import com.poly.service.OrderDetailService;
+import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/rest/orderdetails")
+@RequestMapping("/rest/order-details")
+@RequiredArgsConstructor
 public class OrderDetailRestController {
-	@Autowired
-	private OrderDetailService orderDetailService;
-	
-	@Autowired
-	private ModelMapper modelMapper;
-	
-	@GetMapping
-	public List<OrderDetailDto> getAllOrderDetail(){
-		return orderDetailService.getAllOrderDetails().stream().map(o -> modelMapper.map(o, OrderDetailDto.class)).collect(Collectors.toList());
-	}
 
-	@GetMapping("{id}")
-	public OrderDetailDto getByOrderDetailId(@PathVariable("id") Integer id) {
-		OrderDetail orderDetail = orderDetailService.getById(id);
-		return modelMapper.map(orderDetail, OrderDetailDto.class);
-	}
+    private final OrderDetailService orderDetailService;
 
-	@GetMapping("order-id/{id}")
-	public List<OrderDetailDto> getByOrderId(@PathVariable("id") Integer id) {
-		return orderDetailService.getByOrderId(id).stream().map(o -> modelMapper.map(o, OrderDetailDto.class)).collect(Collectors.toList());
-	}
+    @GetMapping
+    public ResponseEntity<List<OrderDetailResponse>> getAllOrderDetail() {
+        return ResponseEntity.ok(orderDetailService.getAllOrderDetails());
+    }
 
-	@PostMapping
-	public OrderDetailDto createOrderDetail(@RequestBody OrderDetailDto orderDetailDto){
-		OrderDetail orderDetail = modelMapper.map(orderDetailDto,OrderDetail.class);
-		return modelMapper.map(orderDetailService.createOrderDetail(orderDetail),OrderDetailDto.class);
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDetailResponse> getByOrderDetailId(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(orderDetailService.getById(id));
+    }
 
-	@PutMapping()
-	public OrderDetailDto updateOrderDetail(@RequestBody OrderDetailDto orderDetailDto){
-		OrderDetail orderDetail = modelMapper.map(orderDetailDto,OrderDetail.class);
-		return modelMapper.map(orderDetailService.updateOrderDetail(orderDetail),OrderDetailDto.class);
-	}
+    @GetMapping("/{orderId}")
+    public ResponseEntity<List<OrderDetailResponse>> getByOrderId(@PathVariable("orderId") Integer id) {
+        return ResponseEntity.ok(orderDetailService.getByOrderId(id));
+    }
 
-	@DeleteMapping("{id}")
-	public void deleteOrderDetail(@PathVariable("id") Integer id){
-		orderDetailService.delete(id);
-	}
+    @PostMapping
+    public ResponseEntity<OrderDetailResponse> createOrderDetail(@RequestBody OrderDetailRequest request) {
+        return ResponseEntity.ok(orderDetailService.createOrderDetail(request));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<OrderDetailResponse> updateOrderDetail(@PathVariable int id, @RequestBody OrderDetailRequest request) {
+        return ResponseEntity.ok(orderDetailService.updateOrderDetail(id, request));
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteOrderDetail(@PathVariable("id") Integer id) {
+        orderDetailService.delete(id);
+    }
 
 }

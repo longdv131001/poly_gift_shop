@@ -1,14 +1,19 @@
 package com.poly.service;
 
+import com.poly.request.CategoryRequest;
+import com.poly.request.CategoryResponse;
+
 import java.util.List;
 
-import com.poly.entity.Category;
+public interface CategoryService {
 
-public interface CategoryService{
+	List<CategoryResponse> findAll();
 
-	List<Category> findAll();
-	Category create (Category cate);
-	Category update (Category cate);
-	Category findById(Integer id);
+	CategoryResponse create(CategoryRequest request);
+
+	CategoryResponse update(int id, CategoryRequest request);
+
+	CategoryResponse findById(Integer id);
+
 	void delete(Integer id);
 }

@@ -1,25 +1,23 @@
 package com.poly.service;
 
 
-import java.util.List;
+import com.poly.request.OrderRequest;
+import com.poly.response.OrderResponse;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.poly.entity.Order;
+import java.util.List;
 
 
 public interface OrderService{
 
-	List<Order> getAllOrder();
+	List<OrderResponse> getAllOrder();
 
-	Order create(Order order);
+	OrderResponse create(OrderRequest request);
 
-	Order update(Order order);
+	OrderResponse update(int id, OrderRequest request);
 
-	Order findById(Integer id);
-
-	List<Order> findByUsername(String username);
+	OrderResponse findById(Integer id);
 
 	void delete(Integer id);
 
-	List<Order>  findBySdt(String sdt);
+	List<OrderResponse> findByPhoneNumber(String phoneNumber);
 }

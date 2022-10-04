@@ -1,108 +1,142 @@
 package com.poly.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.poly.config.exception.AppException;
+import com.poly.entity.Account;
+import com.poly.entity.Cart;
+import com.poly.entity.Product;
+import com.poly.repository.AccountRepository;
+import com.poly.repository.CartRepository;
+import com.poly.repository.ProductRepository;
+import com.poly.request.CartRequest;
+import com.poly.response.CartResponse;
+import com.poly.service.CartService;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-
-import com.poly.entity.Cart;
-import com.poly.entity.Product;
-import com.poly.repository.AccountDAO;
-import com.poly.repository.CartRepository;
-import com.poly.repository.ProductDAO;
-import com.poly.service.CartService;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
 
-	@Autowired
-	private CartRepository cartRepository;
+    private final CartRepository cartRepository;
 
-	@Autowired
-	private AccountDAO accRepo;
+    private final AccountRepository accountRepository;
 
-	@Autowired
-	private ProductDAO pRepo;
+    private final ProductRepository productRepository;
 
-	@Override
-	public List<Cart> getCartByUsername() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			String username = auth.getName();
-			return cartRepository.findByUsername(username);
-		}
-		return null;
-	}
+    private final ModelMapper mapper;
 
-	@Override
-	public Cart createCart(Cart cart) {
+    @Override
+    public List<CartResponse> getCartByUsername() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            String username = auth.getName();
+            return cartRepository.findByUsername(username)
+                    .stream()
+                    .map(cart -> mapper.map(cart, CartResponse.class))
+                    .collect(Collectors.toList());
+        } else {
+            throw new AppException("User not login", 401);
+        }
+    }
 
-		Optional<Product> product = pRepo.findById(cart.getProduct().getId());
-		if (product.isPresent()) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			if (!(auth instanceof AnonymousAuthenticationToken)) {
-				String username = auth.getName();
-				cart.setAccount(accRepo.findAccountByUsername(username));
-				cart.setProduct(product.get());
-				product.get().setQuantity(product.get().getQuantity() - cart.getQuantity());
-				pRepo.save(product.get());
-				return cartRepository.save(cart);
-			}
-		}
-		return null;
-	}
+    @Override
+    public CartResponse createCart(CartRequest request) {
+        Product product = productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new AppException("Product not found", 404));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            String username = auth.getName();
+            Account account = accountRepository.findById(username)
+                    .orElseThrow(() -> new AppException("Account not found", 404));
+            Cart cart = cartRepository.save(Cart.builder()
+                    .account(account)
+                    .product(product)
+                    .quantity(request.getQuantity())
+                    .build());
 
-	@Override
-	public Cart updateCart(Cart cartNew) {
-		Optional<Product> product = pRepo.findById(cartNew.getProduct().getId());
-		if (product.isPresent()) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			if (!(auth instanceof AnonymousAuthenticationToken)) {
-				String username = auth.getName();
-				cartNew.setAccount(accRepo.findAccountByUsername(username));
-			    Cart cOld = cartRepository.getById(cartNew.getId());
-				cOld.getProduct().setQuantity(product.get().getQuantity() + cOld.getQuantity());
-				cartRepository.save(cOld);
-				product.get().setQuantity(product.get().getQuantity() - cartNew.getQuantity());
-				pRepo.save(product.get());
-				return cartRepository.save(cartNew);
-			}
-		}
-		return null;
-	}
+            product.setQuantity(product.getQuantity() - request.getQuantity());
+            productRepository.save(product);
+            return mapper.map(cart, CartResponse.class);
+        } else {
+            throw new AppException("User not login", 401);
+        }
+    }
 
-	@Override
-	public void deleteCartByUsername() {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String username = auth.getName();
-		cartRepository.deleteByUsername(username);
-	}
+    @Override
+    public CartResponse updateCart(int id, CartRequest request) {
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new AppException("Cart not found", 404));
+        Product product = productRepository.findById(request.getProductId())
+                .orElseThrow(() -> new AppException("Product not found", 404));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            String username = auth.getName();
+            Account account = accountRepository.findById(username)
+                    .orElseThrow(() -> new AppException("Account not found", 404));
 
-	@Override
-	public Cart findById(Integer id) {
-		return cartRepository.findById(id).get();
-	}
+            cart.getProduct().setQuantity(product.getQuantity() + cart.getQuantity());
+            cartRepository.save(cart);
+            product.setQuantity(product.getQuantity() - cart.getQuantity());
+            productRepository.save(product);
+            Cart cartNew = cartRepository.save(Cart.builder()
+                    .account(account)
+                    .product(product)
+                    .quantity(request.getQuantity())
+                    .build());
+            return mapper.map(cartNew, CartResponse.class);
+        } else {
+            throw new AppException("User not login", 401);
+        }
+    }
 
-	@Override
-	public void deleteCartById(Integer id) {
-		Cart cart = cartRepository.getById(id);
-		Product product = pRepo.getById(cart.getProduct().getId());
-		product.setQuantity(product.getQuantity() + cart.getQuantity());
-		pRepo.save(product);
-		cartRepository.deleteById(id);
-	}
+    @Override
+    public void deleteCartByUsername() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        cartRepository.deleteByUsername(username);
+    }
 
-	@Override
-	public Cart findByProductId(Integer idProduct) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String username = auth.getName();
-		return cartRepository.findByProductId(idProduct, username);
-	}
+    @Override
+    public CartResponse findById(Integer id) {
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new AppException("Cart not found", 404));
+        return mapper.map(cart, CartResponse.class);
+    }
+
+    @Override
+    public void deleteCartById(Integer id) {
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(() -> new AppException("Cart not found", 404));
+        Product product = productRepository.findById(cart.getProduct().getId())
+                .orElseThrow(() -> new AppException("Product not found", 404));
+        product.setQuantity(product.getQuantity() + cart.getQuantity());
+        productRepository.save(product);
+        cartRepository.delete(cart);
+    }
+
+    @Override
+    public CartResponse findByProductId(Integer idProduct) {
+        Product product = productRepository.findById(idProduct)
+                .orElseThrow(() -> new AppException("Product not found", 404));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            String username = auth.getName();
+            Account account = accountRepository.findById(username)
+                    .orElseThrow(() -> new AppException("Account not found", 404));
+            Cart cart = cartRepository.findByProductId(product, account);
+            return mapper.map(cart, CartResponse.class);
+        } else {
+            throw new AppException("User not login", 401);
+        }
+
+    }
 
 
 }
